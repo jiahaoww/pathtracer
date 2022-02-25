@@ -17,7 +17,7 @@ class Material {
 public:
     MATERIAL_TYPE type;
     float roughness;
-    float metallic;
+    float metallic = 0.0;
     float ior;
     float shine_exponent;
     vec3 Kd;

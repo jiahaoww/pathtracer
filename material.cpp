@@ -63,12 +63,11 @@ vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
         case MATERIAL_TYPE::DIFFUSE: {
             float x1 = get_random_float();
             float x2 = get_random_float();
-            float theta = x1 * PI;
+            float z = std::abs(1.0f - 2.0f * x1);
+            float r = std::sqrt(1.0f - z * z);
             float phi = x2 * 2.0f * PI;
-            float r = std::sin(theta);
             float x = r * std::cos(phi);
             float y = r * std::sin(phi);
-            float z = std::cos(theta);
             vec3 local_wi = {x, y, z};
             vec3 world_wi = toWorld(local_wi, N);
             return world_wi;
@@ -76,20 +75,29 @@ vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
         case MATERIAL_TYPE::MICRO_FACET: {
             float x1 = get_random_float();
             float x2 = get_random_float();
-            float a = roughness * roughness;
-            float a2 = a * a;
-            float theta = std::acos(std::sqrt((1.0f - x1) / (x1 * (a2 - 1.0f) + 1.0f)));
+            float z = std::abs(1.0f - 2.0f * x1);
+            float r = std::sqrt(1.0f - z * z);
             float phi = x2 * 2.0f * PI;
-
-            float r = std::sin(theta);
             float x = r * std::cos(phi);
             float y = r * std::sin(phi);
-            float z = std::cos(theta);
-            vec3 local_h = {x, y, z};
-            vec3 world_h = toWorld(local_h, N);
-            vec3 wi = reflect(N, wo);
-            return wi;
-
+            vec3 local_wi = {x, y, z};
+            vec3 world_wi = toWorld(local_wi, N);
+            return world_wi;
+//            float x1 = get_random_float();
+//            float x2 = get_random_float();
+//            float a = roughness * roughness;
+//            float a2 = a * a;
+//            float theta = std::acos(std::sqrt((1.0f - x1) / (x1 * (a2 - 1.0f) + 1.0f)));
+//            float phi = x2 * 2.0f * PI;
+//
+//            float z = std::cos(theta);
+//            float r = std::sqrt(1.0f - z * z);
+//            float x = r * std::cos(phi);
+//            float y = r * std::sin(phi);
+//            vec3 local_h = {x, y, z};
+//            vec3 world_h = toWorld(local_h, N);
+//            vec3 wi = reflect(world_h, wo);
+//            return wi;
         }
     }
 }
@@ -124,7 +132,7 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
             F = F0 + std::pow(1.0f - cos1, 5.0f) * (vec3(1.0f) - F0);
 
             vec3 f_cook_torrance =
-                    D * F * G / (4 * std::max(glm::dot(wo, N), 0.0f) * std::max(glm::dot(wi, N), 0.0f) + EPSILON);
+                    D * F * G / (4 * std::max(glm::dot(wo, N), 0.0f) * std::max(glm::dot(wi, N), 0.0f) + 0.001f);
             vec3 _kd = (vec3(1.0f) - F) * (1 - metallic);
 
             if (glm::dot(N, wi) > 0.0f) {
@@ -140,20 +148,25 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
     switch (type) {
         case MATERIAL_TYPE::DIFFUSE: {
             if (glm::dot(wi, N) > 0.0f) {
-                return 1.0f / PI;
+                return 0.5f / PI;
             } else {
                 return EPSILON;
             }
         }
         case MATERIAL_TYPE::MICRO_FACET: {
             if (glm::dot(wi, N) > 0.0f) {
+                return 0.5f / PI;
+            } else {
+                return EPSILON;
+            }
+            if (glm::dot(wi, N) > 0.0f) {
                 vec3 h = glm::normalize(wo + wi);
                 float a = roughness * roughness;
                 float a2 = a * a;
-                float cos_theta = std::max(glm::dot(h, N), EPSILON);
+                float cos_theta = std::max(glm::dot(h, N), 0.001f);
                 float exp = (a2 - 1.0f) * cos_theta * cos_theta + 1.0f;
                 float D = a2 / (PI * exp * exp);
-                return D * cos_theta / (4.0f * std::max(glm::dot(wo, h), 0.0f) + EPSILON);
+                return D * cos_theta / (4.0f * std::max(glm::dot(wo, h), 0.0f) + 0.001f);
             } else {
                 return EPSILON;
             }

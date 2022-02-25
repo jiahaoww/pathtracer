@@ -17,7 +17,7 @@ public:
     vec3 emit = {};
     Object* obj;
     Material* m;
-    float t;
+    double t;
 public:
     Intersection() {
         has = false;
@@ -26,7 +26,7 @@ public:
         emit = vec3(0.0f);
         obj = nullptr;
         m = nullptr;
-        t = std::numeric_limits<float>::infinity();
+        t = std::numeric_limits<double>::infinity();
     }
 };
 

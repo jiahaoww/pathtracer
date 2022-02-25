@@ -22,22 +22,15 @@ public:
         }
         const auto &mesh = loader.LoadedMeshes[0];
 
-        std::vector<glm::vec3> vertices;
-
-        for (objl::Vertex vertex: mesh.Vertices) {
-            vertices.emplace_back(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
-        }
-
-        int current = 0;
-        glm::uvec3 face;
-        for (uint32_t index: mesh.Indices) {
-            face[current++] = index;
-            if (current == 3) {
-                objects.emplace_back(new Triangle(vertices[face[0]], vertices[face[1]], vertices[face[2]], m));
-                current = 0;
+        for(int i = 0; i < mesh.Vertices.size(); i+=3) {
+            vec3 v[3];
+            for (int j = 0; j < 3; j++) {
+                v[j] = {mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y, mesh.Vertices[i + j].Position.Z};
             }
+            Object* obj = new Triangle(v[0], v[1], v[2], m);
+            objects.push_back(obj);
         }
-        std::cout << "face number: " << objects.size() << std::endl;
+
         return objects;
     }
 };

@@ -83,7 +83,7 @@ public:
         objects = objs;
         std::cout << "start building BVH" << std::endl;
         root = recursive_build(objects.data(), objects.size());
-        // print_aabb(root);
+        print_aabb(root);
     }
 
     Intersection get_intersection(BvhNode *node, const Ray &ray) {
@@ -127,7 +127,7 @@ public:
     }
 
     void sample(Intersection &inter, float &pdf) {
-        float p = get_random_float() * root->area;
+        float p = std::sqrt(get_random_float()) * root->area;
         sample_node(root, inter, pdf, p);
         pdf /= root->area;
     }

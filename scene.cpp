@@ -11,6 +11,8 @@ Scene::Scene(int w, int h): width(w), height(h) {
 }
 
 Intersection Scene::intersect(const Ray &ray) const {
+//    std::cout << "scene bvh" << std::endl;
+//    bvh->print_aabb(bvh->root);
     return bvh->intersect(ray);
 }
 
@@ -22,29 +24,34 @@ vec3 Scene::castRay(const Ray &ray) {
     if (inter.m->has_emission) {
         return inter.m->emit;
     }
+    // return vec3(0.0f);
     vec3 L_dir(0.0f);
     vec3 L_in_dir(0.0f);
     Intersection light_inter;
     float light_pdf;
     sample_light(light_inter, light_pdf);
     vec3 light_dir = glm::normalize(light_inter.pos - inter.pos);
-    Ray light_ray(inter.pos + light_dir * EPSILON, light_dir);
+    Ray light_ray(inter.pos + light_dir * 0.01f, light_dir);
     Intersection i = intersect(light_ray);
     // not blocked
     if (glm::length(i.pos - light_inter.pos) < 0.01) {
         float d = glm::length(light_inter.pos - inter.pos);
-        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir) * light_inter.m->emit * glm::dot(light_inter.normal, -light_dir) * glm::dot(inter.normal, light_dir) / (d * d * light_pdf);
+        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir) * light_inter.m->emit * glm::dot(light_inter.normal, -light_dir)
+                * glm::dot(inter.normal, light_dir) / (d * d * light_pdf);
     }
     if (get_random_float() < rr) {
         vec3 wi = inter.m->sample(inter.normal, -ray.dir);
+        wi = glm::normalize(wi);
         float pdf = inter.m->pdf(inter.normal, -ray.dir, wi);
-        Ray obj_ray(inter.pos + EPSILON * wi, wi);
+        Ray obj_ray(inter.pos + 0.01f * wi, wi);
         Intersection i = intersect(obj_ray);
         if (i.has && !intersect(obj_ray).m->has_emission) {
             L_in_dir = castRay(obj_ray) * inter.m->eval(inter.normal, -ray.dir, wi) * glm::dot(inter.normal, wi) / (pdf * rr);
         }
     }
-    return L_dir;
+    vec3 color = L_dir + L_in_dir;
+    vec3 hit_color = {clamp(0.0f, 1.0f, color.x), clamp(0.0f, 1.0f, color.y), clamp(0.0f, 1.0f, color.z)};
+    return hit_color;
 }
 
 void Scene::build_bvh() {
@@ -71,7 +78,7 @@ void Scene::sample_light(Intersection &inter, float &pdf) {
     for (auto& obj: objects) {
         if (obj->m->has_emission) {
             current_light_area += obj->get_area();
-            if (current_light_area > area) {
+            if (current_light_area >= area) {
                 obj->sample(inter, pdf);
             }
         }
@@ -85,7 +92,7 @@ void Scene::render() {
 
 
     // change the spp value to change sample ammount
-    int spp = 16;
+    int spp = 256;
     std::cout << "SPP: " << spp << "\n";
     for (uint32_t j = 0; j < height; ++j) {
         int threads = std::thread::hardware_concurrency();

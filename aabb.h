@@ -33,8 +33,9 @@ public:
 
     bool intersect(const Ray& ray) const {
         bool is_positive[] = {ray.dir.x > 0.0f, ray.dir.y > 0.0f, ray.dir.z > 0.0f};
-        vec3 t1 = (v_min - ray.ori) / ray.dir;
-        vec3 t2 = (v_max - ray.ori) / ray.dir;
+        vec3 inv_dir = {1.0f / ray.dir.x, 1.0f / ray.dir.y, 1.0f / ray.dir.z};
+        vec3 t1 = (v_min - ray.ori) * inv_dir;
+        vec3 t2 = (v_max - ray.ori) * inv_dir;
         float t1_x = t1.x;
         float t1_y = t1.y;
         float t1_z = t1.z;
