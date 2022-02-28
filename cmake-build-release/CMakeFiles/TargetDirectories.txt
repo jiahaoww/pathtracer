@@ -1,3 +1,0 @@
-F:/pathtracer/cmake-build-release/CMakeFiles/pathTracer.dir
-F:/pathtracer/cmake-build-release/CMakeFiles/edit_cache.dir
-F:/pathtracer/cmake-build-release/CMakeFiles/rebuild_cache.dir
