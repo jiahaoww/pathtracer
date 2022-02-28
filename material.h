@@ -27,6 +27,7 @@ public:
     std::string map_kd;
     std::string map_ks;
     bool has_emission;
+    bool is_specular;
     Texture* texture = nullptr;
 public:
     Material();

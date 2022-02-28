@@ -13,6 +13,20 @@ Scene::Scene(int w, int h): width(w), height(h) {
     image.resize(w * h * 3);
 }
 
+Scene::Scene(int w, int h, Camera &cam): width(w), height(h), camera(cam) {
+    frame_buffer.resize(w * h);
+    image.resize(w * h * 3);
+}
+
+
+Scene::Scene(Camera &cam) {
+    width = cam.width;
+    height = cam.height;
+    camera = cam;
+    frame_buffer.resize(width * height);
+    image.resize(width * height * 3);
+}
+
 Intersection Scene::intersect(const Ray &ray) const {
     return bvh->intersect(ray);
 }
@@ -52,19 +66,23 @@ vec3 Scene::castRay(const Ray &ray) {
         int p = h * tex_coord.y;
         int q = w * tex_coord.x;
         p = (p % h + h ) % h;
-        p = h - p;
+        p = h - 1 - p;
         q = (q % w + w) % w;
 
 
         glm::u8vec3 color = (*inter.m->texture)[p][q];
         kd = {color.x / 255.0f, color.y / 255.0f, color.z / 255.0};
     }
-    if (i.has && glm::length(i.pos - light_inter.pos) < 0.01f) {
+    if (i.has && i.obj == light_inter.obj) {
         float d = glm::length(light_inter.pos - inter.pos);
         L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir, kd) * light_inter.m->emit * std::max(glm::dot(light_inter.normal, -light_dir), 0.0f)
-                * std::max(glm::dot(inter.normal, light_dir), 0.0f) / (d * d * light_pdf);
+                 / (d * d * light_pdf);
     }
-    // return L_dir + inter.m->emit;
+    vec3 dir_color = L_dir + inter.m->emit;
+    return dir_color;
+    return {clamp(0.0f, 1.0f, dir_color.x), clamp(0.0f, 1.0f, dir_color.y), clamp(0.0f, 1.0f, dir_color.z)};
+    return L_dir + inter.m->emit;
+
     if (get_random_float() < rr) {
         vec3 wi = inter.m->sample(inter.normal, -ray.dir);
         wi = glm::normalize(wi);
@@ -72,12 +90,12 @@ vec3 Scene::castRay(const Ray &ray) {
         Ray obj_ray(inter.pos, wi);
         Intersection i = intersect(obj_ray);
         if (i.has && !intersect(obj_ray).m->has_emission) {
-            L_in_dir = castRay(obj_ray) * inter.m->eval(inter.normal, -ray.dir, wi, kd) * glm::dot(inter.normal, wi) / (pdf * rr);
+            L_in_dir = castRay(obj_ray) * inter.m->eval(inter.normal, -ray.dir, wi, kd) / (pdf * rr);
         }
     }
     vec3 color = L_dir + L_in_dir + inter.m->emit;
     vec3 hit_color = {clamp(0.0f, 1.0f, color.x), clamp(0.0f, 1.0f, color.y), clamp(0.0f, 1.0f, color.z)};
-    return hit_color;
+    return color;
 }
 
 void Scene::build_bvh() {
@@ -104,25 +122,21 @@ void Scene::sample_light(Intersection &inter, float &pdf) {
             current_light_area += obj->get_area();
             if (current_light_area >= area) {
                 obj->sample(inter, pdf);
-                //std::cout << pdf << std::endl;
                 break;
             }
         }
     }
 }
 
-void Scene::render() {
-    float scale = tan(fov * 0.5 * PI / 180.0);
+void Scene::render(int spp) {
+    float scale = tan(camera.fov * 0.5 * PI / 180.0);
     float imageAspectRatio = width / (float) height;
-    vec3 eye_pos(0, 2, 15);
-    vec3 look_at(0.0, 1.69521, 14.0476);
-    vec3 front = normalize(look_at - eye_pos);
-    vec3 up(0.0,0.952421,-0.304787);
-    vec3 right = -glm::cross(up, front);
+    glm::mat4 view = camera.get_view_matrix();
+    glm::mat4 inverse_view = glm::inverse(view);
 
 
-    // change the spp value to change sample ammount
-    int spp = 16;
+
+    // change the spp value to change sample amount
     std::cout << "SPP: " << spp << "\n";
     for (uint32_t j = 0; j < height; ++j) {
         int threads = std::thread::hardware_concurrency() << 1;
@@ -141,8 +155,8 @@ void Scene::render() {
                                   imageAspectRatio * scale;
                         float y = (1 - 2 * (j + get_random_float()) / (float)height) * scale;
 
-                        vec3 dir = normalize(x * right + y * up + (1.0f) * front);
-                        frame_buffer[j * width + i] += castRay(Ray(eye_pos, dir)) / (float)spp;
+                        vec3 dir = glm::normalize(inverse_view * vec4(vec3(x, y, -1.0f), 0.0f));
+                        frame_buffer[j * width + i] += castRay(Ray(camera.eye, dir)) / (float)spp;
                     }
                 }
             }, begin_offset, end_offset);
@@ -169,3 +183,6 @@ void Scene::render() {
     //fclose(fp);
     stbi_write_png("result.png", width, height, 3, image.data(), 0);
 }
+
+
+

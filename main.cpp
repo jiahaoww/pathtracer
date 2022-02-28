@@ -1,34 +1,52 @@
 #include <iostream>
 #include <chrono>
+#include <map>
 #include "loader.h"
 #include "mesh.h"
 #include "scene.h"
-#include "Texture.h"
+#include "xml.h"
+
 
 int main() {
+    int model = 2;
+    int spp = 1024;
+    std::string name;
+    switch (model) {
+        case 1: {
+            name = "cornell-box";
+            break;
+        }
+        case 2: {
+            name = "veach-mis";
+            break;
+        }
+        case 3: {
+            name = "bedroom";
+            break;
+        }
+        default:
+            name = "cornell-box";
+    }
+    std::string base_path = "../models/" + name + "/";
+    std::string model_name = name + ".obj";
+    std::string xml_name = name + ".xml";
+    std::string xml_path = base_path + xml_name;
+    Camera camera;
+    std::map <std::string, vec3> light_emits = XML::load_xml(xml_path, camera);
+    auto meshes = Loader::load(base_path, model_name, nullptr, light_emits);
 
-//    Texture texture("../models/cherry-wood-texture.jpg");
-//
-//    for (int i = 0; i < texture.height / 2; ++i) {
-//        for (int j = 0; j < texture.width / 3; ++j) {
-//            texture[i][j] = glm::u8vec3{255, 0, 0};
-//        }
-//    }
-//    texture.write("hello.png");
-//    return 0;
-
-    auto meshes = Loader::load("../models/veach-mis/veach-mis.obj", nullptr);
     std::vector<Mesh *> MeshList;
     for (auto &mesh: meshes) {
         MeshList.push_back(new Mesh(mesh));
     }
-    Scene scene(1200, 900);
+
+    Scene scene(camera);
     for (auto Mesh: MeshList) {
         scene.add_obj(Mesh);
     }
     scene.build_bvh();
     auto start = std::chrono::system_clock::now();
-    scene.render();
+    scene.render(spp);
     auto stop = std::chrono::system_clock::now();
 
     std::cout << "Render complete: \n";

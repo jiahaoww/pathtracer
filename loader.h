@@ -11,60 +11,39 @@
 #include "triangle.h"
 #include "OBJ_Loader.h"
 #include "Texture.h"
+#include <map>
 
 class Loader {
 public:
-    static std::vector<std::vector<Object*>> load(std::string filepath, Material *m) {
+    static std::vector<std::vector<Object*>> load(std::string& base_path, std::string& obj_name, Material *m, std::map<std::string, vec3>& lights_emit) {
         objl::Loader loader;
-        std::cout << filepath << std::endl;
-        loader.LoadFile(std::move(filepath));
-
-        std::cout << "loaded meshes " << loader.LoadedMeshes.size() << " " << loader.LoadedMaterials.size() << std::endl;
-
+        loader.LoadFile(base_path + obj_name);
         std::vector<std::vector<Object*>> meshes;
 
         for(auto& mesh: loader.LoadedMeshes) {
             std::vector<Object *> triangle_list;
             auto material = mesh.MeshMaterial;
-
             vec3 emit(0.0f);
-            if (mesh.MeshMaterial.name == "Light") {
-                emit = vec3(17, 12, 4);
-            }
-            if (mesh.MeshMaterial.name == "Light1") {
-                // std::cout << "light1" << std::endl;
-                emit = vec3(901.803, 901.803, 901.803);
-            }
-            if (mesh.MeshMaterial.name == "Light2") {
-                emit = vec3(100.0, 100.0, 100.0);
-            }
-            if (mesh.MeshMaterial.name == "Light3") {
-                emit = vec3(11.1111, 11.1111, 11.1111);
-            }
-            if (mesh.MeshMaterial.name == "Light4") {
-                emit = vec3(1.23457, 1.23457, 1.23457);
-            }
-            if (mesh.MeshMaterial.name == "Light5") {
-               emit = vec3(800.0, 800.0, 800.0);
+            for (auto iter = lights_emit.begin(); iter != lights_emit.end(); iter++) {
+                std::string mtl_name = iter->first;
+                vec3 light_emit = iter->second;
+                if (mesh.MeshMaterial.name == mtl_name) {
+                    emit = light_emit;
+                    break;
+                }
             }
 
             auto materialType = DIFFUSE;
-//            if (mesh.MeshMaterial.name == "Plane1" || mesh.MeshMaterial.name == "Plane2" || mesh.MeshMaterial.name == "Plane3" || mesh.MeshMaterial.name == "Plane4") {
-//                materialType = MICRO_FACET;
-//            }
 
             float ior = material.Ni;
             float shine_exponent = material.Ns;
-            shine_exponent = 16.0f;
             vec3 Kd = {material.Kd.X, material.Kd.Y, material.Kd.Z};
             vec3 Ks = {material.Ks.X, material.Ks.Y, material.Ks.Z};
             Material* mym = new Material(materialType, Kd, Ks, emit, ior, shine_exponent, material.map_Kd, material.map_Ks);
-//            mym->roughness = 0.1;
-//            mym->metallic = 1.0;
             Material* tm = m == nullptr ? mym : m;
             if(mesh.MeshMaterial.map_Kd.size() > 0) {
                 // read texture
-                std::string texture_path = "../models/veach-mis" + mesh.MeshMaterial.map_Kd;
+                std::string texture_path = base_path + mesh.MeshMaterial.map_Kd;
                 Texture* texture = new Texture(texture_path.c_str());
                 tm->texture = texture;
             }

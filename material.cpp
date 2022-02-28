@@ -49,6 +49,7 @@ float G_schlick_ggx(const vec3& N, const vec3& v, const float& k) {
 
 Material::Material(): Kd(vec3(0.0f)), Ks(vec3(1.0f)), emit(vec3(0.0f)), ior(1.85f), shine_exponent(32.0f), map_kd(""), map_ks("") {
     has_emission = glm::length(emit) >= EPSILON;
+    is_specular = glm::length(Ks) >= EPSILON;
     type = MATERIAL_TYPE::DIFFUSE;
 }
 
@@ -56,6 +57,7 @@ Material::Material(MATERIAL_TYPE t, const vec3 &kd, const vec3 &ks, const vec3 &
                    std::string map_kd, std::string map_ks) :Kd(kd), Ks(ks), emit(e), ior(i), shine_exponent(shine_exponent), map_kd(std::move(map_kd)), map_ks(std::move(map_ks)){
     type = t;
     has_emission = glm::length(emit) >= EPSILON;
+    is_specular = glm::length(Ks) >= EPSILON;
 }
 
 vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
@@ -97,8 +99,12 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3& K
     switch (type) {
         case MATERIAL_TYPE::DIFFUSE: {
             if (glm::dot(wi, N) > 0.0f) {
-                vec3 reflect_dir = reflect(N, wi);
-                vec3 specular = Ks * std::pow(std::max(glm::dot(reflect_dir, wo), 0.0f), shine_exponent);
+                vec3 specular(0.0f);
+                vec3 diffuse = my_Kd * std::max(glm::dot(N, wi), 0.0f);
+                if(is_specular) {
+                    vec3 reflect_dir = reflect(N, wi);
+                    specular = 100.0f *  Ks * std::pow(std::max(glm::dot(wo, reflect_dir), 0.0f), shine_exponent);
+                }
                 vec3 color = specular;
                 return color / PI;
             } else {

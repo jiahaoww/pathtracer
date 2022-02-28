@@ -15,14 +15,16 @@ const float PI = std::acos(-1.0f);
 
 const float EPSILON = 1e-5;
 
-using vec3 = glm::vec3;
 using vec2 = glm::vec2;
+using vec3 = glm::vec3;
+using vec4 = glm::vec4;
+using mat4 = glm::mat4;
+
 
 inline float get_random_float()
 {
     static thread_local std::random_device dev;
     static thread_local std::uniform_real_distribution<float> dist(0.f, 1.f); // distribution in range [1, 6]
-
     return dist(dev);
 }
 

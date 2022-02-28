@@ -34,7 +34,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="692cf308-8406-415b-9898-d90007c1b299" name="Changes" comment="Changes">
+      <change afterPath="$PROJECT_DIR$/camera.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/xml/pugiconfig.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/xml/pugixml.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/xml/pugixml.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/xml/tinyxml2.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/xml/tinyxml2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bedroom/Teapot.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bedroom/bedroom.mb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bedroom/bedroom.mtl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bedroom/bedroom.obj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bedroom/bedroom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bedroom/panel-wood-3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bedroom/wallpaper-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bedroom/wood4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/xml.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/global.h" beforeDir="false" afterPath="$PROJECT_DIR$/global.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loader.h" beforeDir="false" afterPath="$PROJECT_DIR$/loader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/material.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/material.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/material.h" beforeDir="false" afterPath="$PROJECT_DIR$/material.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/box_stack.mtl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/box_stack.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/bunny/bunny.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/cherry-wood-texture.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/models/cornell-box/cherry-wood-texture.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/cornell-box.mb" beforeDir="false" afterPath="$PROJECT_DIR$/models/cornell-box/cornell-box.mb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/cornell-box.mtl" beforeDir="false" afterPath="$PROJECT_DIR$/models/cornell-box/cornell-box.mtl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/cornell-box.obj" beforeDir="false" afterPath="$PROJECT_DIR$/models/cornell-box/cornell-box.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/cornell-box.xml" beforeDir="false" afterPath="$PROJECT_DIR$/models/cornell-box/cornell-box.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/scene.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scene.h" beforeDir="false" afterPath="$PROJECT_DIR$/scene.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +105,7 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -82,19 +113,14 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="pathTracer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pathTracer" TARGET_NAME="pathTracer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pathTracer" RUN_TARGET_NAME="pathTracer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -119,6 +145,7 @@
       <workItem from="1645982374051" duration="959000" />
       <workItem from="1646020807496" duration="1000" />
       <workItem from="1646025039941" duration="615000" />
+      <workItem from="1646026274669" duration="24373000" />
     </task>
     <servers />
   </component>
@@ -138,25 +165,61 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1646029615549">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1646029615549" />
     <state x="707" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1646025089531">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="707" y="320" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1646025089531" />
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1646026140882">
+    <state width="1877" height="348" key="GridCell.Tab.0.bottom" timestamp="1646053091175">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1646026140882" />
-    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1646026140882">
+    <state width="1877" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1646053091175" />
+    <state width="1877" height="348" key="GridCell.Tab.0.center" timestamp="1646053091174">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1646026140882" />
-    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1646026140882">
+    <state width="1877" height="348" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1646053091174" />
+    <state width="1877" height="348" key="GridCell.Tab.0.left" timestamp="1646053091174">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1646026140882" />
-    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1646026140882">
+    <state width="1877" height="348" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1646053091174" />
+    <state width="1877" height="348" key="GridCell.Tab.0.right" timestamp="1646053091175">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1646026140882" />
+    <state width="1877" height="348" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1646053091175" />
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1646053091175">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1646053091175" />
+    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1646053091175">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1646053091175" />
+    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1646053091175">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1646053091175" />
+    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1646053091175">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1646053091175" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1646038333426">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1646038333426" />
+    <state width="346" height="446" key="SwitcherDM" timestamp="1646030273952">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="346" height="446" key="SwitcherDM/0.0.1920.1040@0.0.1920.1040" timestamp="1646030273952" />
+    <state x="800" y="304" key="refactoring.ChangeSignatureDialog" timestamp="1646027126268">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="800" y="304" key="refactoring.ChangeSignatureDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1646027126268" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1646032808503">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1646032808503" />
   </component>
 </project>
