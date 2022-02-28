@@ -16,10 +16,13 @@ Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2, Material* mtl) {
     bounding_box = {p_min, p_max};
 }
 
-Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2, vec2 t0, vec2 t1, vec2 t2, Material* mtl) {
+Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 n0, vec3 n1, vec3 n2, vec2 t0, vec2 t1, vec2 t2, Material* mtl) {
     v[0] = v0;
     v[1] = v1;
     v[2] = v2;
+    vn[0] = n0;
+    vn[1] = n1;
+    vn[2] = n2;
     tex[0] = t0;
     tex[1] = t1;
     tex[2] = t2;
@@ -39,9 +42,9 @@ float Triangle::get_area() {
 
 Intersection Triangle::get_interaction(const Ray &ray) {
     Intersection inter;
-    if (glm::dot(ray.dir, normal) > 0.0f) {
-        return inter;
-    }
+//    if (glm::dot(ray.dir, normal) > 0.0f) {
+//        return inter;
+//    }
     vec3 s = ray.ori - v[0];
     vec3 s1 = glm::cross(ray.dir, e2);
     vec3 s2 = glm::cross(s, e1);
@@ -61,16 +64,19 @@ Intersection Triangle::get_interaction(const Ray &ray) {
     }
 
     double t = glm::dot(s2, e2) * inv_s1dote1;
-    if (t < 0) {
+    if (t < EPSILON) {
         return inter;
     }
 
     inter.has = true;
     inter.normal = normal;
+    //inter.normal = (float)b1 * vn[1] + (float)b2 * vn[2] + (float)(1.0f - b1 - b2) * (vn[0]);
     inter.obj = this;
     inter.m = m;
     inter.pos = ray.ori + ray.dir * (float)t;
     inter.t = t;
+    inter.b1 = b1;
+    inter.b2 = b2;
     return inter;
 
 }

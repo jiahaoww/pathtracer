@@ -18,6 +18,8 @@ public:
     Object* obj;
     Material* m;
     double t;
+    double b1;
+    double b2;
 public:
     Intersection() {
         has = false;

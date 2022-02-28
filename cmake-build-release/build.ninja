@@ -84,6 +84,13 @@ build CMakeFiles/pathTracer.dir/scene.cpp.obj: CXX_COMPILER__pathTracer_Release 
   OBJECT_DIR = CMakeFiles\pathTracer.dir
   OBJECT_FILE_DIR = CMakeFiles\pathTracer.dir
 
+build CMakeFiles/pathTracer.dir/src/Texture.cpp.obj: CXX_COMPILER__pathTracer_Release C$:/Users/jiahaoww/CLionProjects/pathTracer/src/Texture.cpp || cmake_object_order_depends_target_pathTracer
+  DEP_FILE = CMakeFiles\pathTracer.dir\src\Texture.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17
+  INCLUDES = -IC:/Users/jiahaoww/CLionProjects/pathTracer/include
+  OBJECT_DIR = CMakeFiles\pathTracer.dir
+  OBJECT_FILE_DIR = CMakeFiles\pathTracer.dir\src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target pathTracer
@@ -92,7 +99,7 @@ build CMakeFiles/pathTracer.dir/scene.cpp.obj: CXX_COMPILER__pathTracer_Release 
 #############################################
 # Link the executable pathTracer.exe
 
-build pathTracer.exe: CXX_EXECUTABLE_LINKER__pathTracer_Release CMakeFiles/pathTracer.dir/main.cpp.obj CMakeFiles/pathTracer.dir/material.cpp.obj CMakeFiles/pathTracer.dir/triangle.cpp.obj CMakeFiles/pathTracer.dir/mesh.cpp.obj CMakeFiles/pathTracer.dir/scene.cpp.obj
+build pathTracer.exe: CXX_EXECUTABLE_LINKER__pathTracer_Release CMakeFiles/pathTracer.dir/main.cpp.obj CMakeFiles/pathTracer.dir/material.cpp.obj CMakeFiles/pathTracer.dir/triangle.cpp.obj CMakeFiles/pathTracer.dir/mesh.cpp.obj CMakeFiles/pathTracer.dir/scene.cpp.obj CMakeFiles/pathTracer.dir/src/Texture.cpp.obj
   FLAGS = -O3 -DNDEBUG
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\pathTracer.dir

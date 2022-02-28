@@ -3,16 +3,17 @@
 //
 
 #include "scene.h"
+#include "triangle.h"
+#include "stb/stb_image_write.h"
 #include <thread>
 #include <future>
 
 Scene::Scene(int w, int h): width(w), height(h) {
     frame_buffer.resize(w * h);
+    image.resize(w * h * 3);
 }
 
 Intersection Scene::intersect(const Ray &ray) const {
-//    std::cout << "scene bvh" << std::endl;
-//    bvh->print_aabb(bvh->root);
     return bvh->intersect(ray);
 }
 
@@ -21,35 +22,60 @@ vec3 Scene::castRay(const Ray &ray) {
     if (!inter.has) {
         return vec3(0.0f);
     }
-    if (inter.m->has_emission) {
-        return inter.m->emit;
-    }
+//    if (inter.m->has_emission) {
+//        return inter.m->emit;
+//    }
     // return vec3(0.0f);
     vec3 L_dir(0.0f);
     vec3 L_in_dir(0.0f);
     Intersection light_inter;
-    float light_pdf;
+    float light_pdf=0.0f;
     sample_light(light_inter, light_pdf);
     vec3 light_dir = glm::normalize(light_inter.pos - inter.pos);
-    Ray light_ray(inter.pos + light_dir * 0.01f, light_dir);
+    Ray light_ray(inter.pos, light_dir);
     Intersection i = intersect(light_ray);
     // not blocked
-    if (glm::length(i.pos - light_inter.pos) < 0.01) {
-        float d = glm::length(light_inter.pos - inter.pos);
-        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir) * light_inter.m->emit * glm::dot(light_inter.normal, -light_dir)
-                * glm::dot(inter.normal, light_dir) / (d * d * light_pdf);
+
+    vec3 kd = inter.m->Kd;
+    if (inter.m->texture != nullptr) {
+        vec2 tex_coord;
+        Object* object = inter.obj;
+        Triangle* triangle = dynamic_cast<Triangle *>(object);
+        if (triangle == nullptr) {
+            throw std::bad_cast();
+        } else {
+            tex_coord = (float)(inter.b1) * triangle->tex[1] + (float)(inter.b2) * triangle->tex[2] + (float)(1.0f - inter.b1 - inter.b2) * triangle->tex[0];
+
+        }
+        int w = inter.m->texture->width;
+        int h = inter.m->texture->height;
+        int p = h * tex_coord.y;
+        int q = w * tex_coord.x;
+        p = (p % h + h ) % h;
+        p = h - p;
+        q = (q % w + w) % w;
+
+
+        glm::u8vec3 color = (*inter.m->texture)[p][q];
+        kd = {color.x / 255.0f, color.y / 255.0f, color.z / 255.0};
     }
+    if (i.has && glm::length(i.pos - light_inter.pos) < 0.01f) {
+        float d = glm::length(light_inter.pos - inter.pos);
+        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir, kd) * light_inter.m->emit * std::max(glm::dot(light_inter.normal, -light_dir), 0.0f)
+                * std::max(glm::dot(inter.normal, light_dir), 0.0f) / (d * d * light_pdf);
+    }
+    // return L_dir + inter.m->emit;
     if (get_random_float() < rr) {
         vec3 wi = inter.m->sample(inter.normal, -ray.dir);
         wi = glm::normalize(wi);
         float pdf = inter.m->pdf(inter.normal, -ray.dir, wi);
-        Ray obj_ray(inter.pos + 0.01f * wi, wi);
+        Ray obj_ray(inter.pos, wi);
         Intersection i = intersect(obj_ray);
         if (i.has && !intersect(obj_ray).m->has_emission) {
-            L_in_dir = castRay(obj_ray) * inter.m->eval(inter.normal, -ray.dir, wi) * glm::dot(inter.normal, wi) / (pdf * rr);
+            L_in_dir = castRay(obj_ray) * inter.m->eval(inter.normal, -ray.dir, wi, kd) * glm::dot(inter.normal, wi) / (pdf * rr);
         }
     }
-    vec3 color = L_dir + L_in_dir;
+    vec3 color = L_dir + L_in_dir + inter.m->emit;
     vec3 hit_color = {clamp(0.0f, 1.0f, color.x), clamp(0.0f, 1.0f, color.y), clamp(0.0f, 1.0f, color.z)};
     return hit_color;
 }
@@ -57,8 +83,6 @@ vec3 Scene::castRay(const Ray &ray) {
 void Scene::build_bvh() {
     std::cout << "start building scene BVH" << std::endl;
     bvh = new BVH(objects);
-    std::cout << bvh->root->size << std::endl;
-    bvh->print_aabb(bvh->root);
 }
 
 void Scene::add_obj(Object *obj) {
@@ -80,6 +104,8 @@ void Scene::sample_light(Intersection &inter, float &pdf) {
             current_light_area += obj->get_area();
             if (current_light_area >= area) {
                 obj->sample(inter, pdf);
+                //std::cout << pdf << std::endl;
+                break;
             }
         }
     }
@@ -88,14 +114,18 @@ void Scene::sample_light(Intersection &inter, float &pdf) {
 void Scene::render() {
     float scale = tan(fov * 0.5 * PI / 180.0);
     float imageAspectRatio = width / (float) height;
-    vec3 eye_pos(278, 273, -800);
+    vec3 eye_pos(0, 2, 15);
+    vec3 look_at(0.0, 1.69521, 14.0476);
+    vec3 front = normalize(look_at - eye_pos);
+    vec3 up(0.0,0.952421,-0.304787);
+    vec3 right = -glm::cross(up, front);
 
 
     // change the spp value to change sample ammount
-    int spp = 256;
+    int spp = 16;
     std::cout << "SPP: " << spp << "\n";
     for (uint32_t j = 0; j < height; ++j) {
-        int threads = std::thread::hardware_concurrency();
+        int threads = std::thread::hardware_concurrency() << 1;
         int offset = width / threads;
         std::vector<std::future<void>> futures;
 
@@ -111,30 +141,31 @@ void Scene::render() {
                                   imageAspectRatio * scale;
                         float y = (1 - 2 * (j + get_random_float()) / (float)height) * scale;
 
-                        vec3 dir = normalize(vec3(-x, y, 1));
+                        vec3 dir = normalize(x * right + y * up + (1.0f) * front);
                         frame_buffer[j * width + i] += castRay(Ray(eye_pos, dir)) / (float)spp;
                     }
                 }
             }, begin_offset, end_offset);
             futures.emplace_back(std::move(task));
         }
-
-        for (auto &&future: futures) {
-            future.get();
-        }
         UpdateProgress(j / (float) height);
     }
     UpdateProgress(1.f);
 
     // save framebuffer to file
-    FILE *fp = fopen("binary.ppm", "wb");
-    (void) fprintf(fp, "P6\n%d %d\n255\n", width, height);
+//    FILE *fp = fopen("binary.png", "wb");
+//    (void) fprintf(fp, "P6\n%d %d\n255\n", width, height);
+    const float gamma = 0.6;
     for (auto i = 0; i < height * width; ++i) {
         static unsigned char color[3];
-        color[0] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].x), 0.6f));
-        color[1] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].y), 0.6f));
-        color[2] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].z), 0.6f));
-        fwrite(color, 1, 3, fp);
+        color[0] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].x), gamma));
+        color[1] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].y), gamma));
+        color[2] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].z), gamma));
+        image[3 * i] = color[0];
+        image[3 * i + 1] = color[1];
+        image[3 * i + 2] = color[2];
+        //fwrite(color, 1, 3, fp);
     }
-    fclose(fp);
+    //fclose(fp);
+    stbi_write_png("result.png", width, height, 3, image.data(), 0);
 }

@@ -14,8 +14,9 @@ public:
     int width;
     int height;
     float rr = 0.8;
-    float fov = 40;
+    float fov = 27.3909;
     std::vector<vec3> frame_buffer;
+    std::vector<uint8_t> image;
     std::vector<Object*> objects;
     BVH* bvh;
 public:

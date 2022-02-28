@@ -6,10 +6,10 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.21"
+						"string" : "3.17"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
@@ -19,7 +19,7 @@
 					]
 				}
 			],
-			"name" : "Debug",
+			"name" : "Release",
 			"projects" : 
 			[
 				{
@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "pathTracer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-pathTracer-Debug-7fe8b67fcbca4011080c.json",
+					"jsonFile" : "target-pathTracer-Release-cfb9a425b312b234c616.json",
 					"name" : "pathTracer",
 					"projectIndex" : 0
 				}
@@ -49,7 +49,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/jiahaoww/CLionProjects/pathTracer/cmake-build-debug",
+		"build" : "C:/Users/jiahaoww/CLionProjects/pathTracer/cmake-build-release",
 		"source" : "C:/Users/jiahaoww/CLionProjects/pathTracer"
 	},
 	"version" : 
