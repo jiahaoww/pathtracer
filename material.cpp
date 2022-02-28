@@ -94,8 +94,12 @@ vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
     }
 }
 
-vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3& KD) const {
+vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3& KD, bool has_texture) const {
     vec3 my_Kd = KD;
+    if (has_texture) {
+        my_Kd = sdr2ldr(KD);
+    }
+    vec3 my_Ks = Ks;
     switch (type) {
         case MATERIAL_TYPE::DIFFUSE: {
             if (glm::dot(wi, N) > 0.0f) {
@@ -103,9 +107,9 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3& K
                 vec3 diffuse = my_Kd * std::max(glm::dot(N, wi), 0.0f);
                 if(is_specular) {
                     vec3 reflect_dir = reflect(N, wi);
-                    specular = 100.0f *  Ks * std::pow(std::max(glm::dot(wo, reflect_dir), 0.0f), shine_exponent);
+                    specular = 1000.0f *  my_Ks * std::pow(std::max(glm::dot(wo, reflect_dir), 0.0f), shine_exponent);
                 }
-                vec3 color = specular;
+                vec3 color = diffuse + specular;
                 return color / PI;
             } else {
                 return {0.0f, 0.0f, 0.0f};
@@ -132,11 +136,11 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3& K
             F = F0 + std::pow(1.0f - cos1, 5.0f) * (vec3(1.0f) - F0);
 
             vec3 f_cook_torrance =
-                    D * F * G / (4 * std::max(glm::dot(wo, N), 0.0f) * std::max(glm::dot(wi, N), 0.0f) + 0.001f);
+                    D * F * G / (4 * std::max(glm::dot(wo, N), 0.0f) * std::max(glm::dot(wi, N), 0.0f) + EPSILON);
             vec3 _kd = (vec3(1.0f) - F) * (1 - metallic);
 
             if (glm::dot(N, wi) > 0.0f) {
-                return _kd * my_Kd * f_lambert + Ks * f_cook_torrance;
+                return _kd * my_Kd * f_lambert + my_Ks * f_cook_torrance;
             } else {
                 return vec3(0.0f);
             }
@@ -158,10 +162,10 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
                 vec3 h = glm::normalize(wo + wi);
                 float a = roughness * roughness;
                 float a2 = a * a;
-                float cos_theta = std::max(glm::dot(h, N), 0.001f);
+                float cos_theta = std::max(glm::dot(h, N), EPSILON);
                 float exp = (a2 - 1.0f) * cos_theta * cos_theta + 1.0f;
                 float D = a2 / (PI * exp * exp);
-                return D * cos_theta / (4.0f * std::max(glm::dot(wo, h), 0.0f) + 0.001f);
+                return D * cos_theta / (4.0f * std::max(glm::dot(wo, h), 0.0f) + EPSILON);
             } else {
                 return EPSILON;
             }

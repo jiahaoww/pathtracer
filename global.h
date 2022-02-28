@@ -43,6 +43,14 @@ inline void UpdateProgress(float progress)
     std::cout.flush();
 };
 
+inline vec3 sdr2ldr(const vec3& light) {
+    return glm::pow(light, glm::vec3(2.2f));
+}
+
+inline vec3 ldr2sdr(const vec3& light) {
+    return glm::pow(light, glm::vec3(1 / 2.2f));
+}
+
 inline float clamp(const float &lo, const float &hi, const float &v)
 { return std::max(lo, std::min(hi, v)); }
 

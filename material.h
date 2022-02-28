@@ -33,7 +33,7 @@ public:
     Material();
     Material(MATERIAL_TYPE t, const vec3& kd, const vec3& ks, const vec3& e, const float& i, const float& shine_exponent = 32.0, std::string  map_kd = "", std::string  map_ks = "");
     vec3 sample(const vec3& N, const vec3& wo) const;
-    vec3 eval(const vec3& N, const vec3& wo, const vec3& wi, const vec3& KD) const;
+    vec3 eval(const vec3& N, const vec3& wo, const vec3& wi, const vec3& KD, bool has_texture) const;
     float pdf(const vec3& N, const vec3& wo, const vec3& wi) const;
 };
 

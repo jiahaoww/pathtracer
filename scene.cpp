@@ -36,14 +36,13 @@ vec3 Scene::castRay(const Ray &ray) {
     if (!inter.has) {
         return vec3(0.0f);
     }
-//    if (inter.m->has_emission) {
-//        return inter.m->emit;
-//    }
-    // return vec3(0.0f);
+    if (inter.m->has_emission) {
+        return inter.m->emit;
+    }
     vec3 L_dir(0.0f);
     vec3 L_in_dir(0.0f);
     Intersection light_inter;
-    float light_pdf=0.0f;
+    float light_pdf = 0.0f;
     sample_light(light_inter, light_pdf);
     vec3 light_dir = glm::normalize(light_inter.pos - inter.pos);
     Ray light_ray(inter.pos, light_dir);
@@ -51,7 +50,9 @@ vec3 Scene::castRay(const Ray &ray) {
     // not blocked
 
     vec3 kd = inter.m->Kd;
+    bool has_texture = false;
     if (inter.m->texture != nullptr) {
+        has_texture = true;
         vec2 tex_coord;
         Object* object = inter.obj;
         Triangle* triangle = dynamic_cast<Triangle *>(object);
@@ -75,13 +76,9 @@ vec3 Scene::castRay(const Ray &ray) {
     }
     if (i.has && i.obj == light_inter.obj) {
         float d = glm::length(light_inter.pos - inter.pos);
-        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir, kd) * light_inter.m->emit * std::max(glm::dot(light_inter.normal, -light_dir), 0.0f)
+        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir, kd, has_texture) * light_inter.m->emit * std::max(glm::dot(light_inter.normal, -light_dir), 0.0f)
                  / (d * d * light_pdf);
     }
-    vec3 dir_color = L_dir + inter.m->emit;
-    return dir_color;
-    return {clamp(0.0f, 1.0f, dir_color.x), clamp(0.0f, 1.0f, dir_color.y), clamp(0.0f, 1.0f, dir_color.z)};
-    return L_dir + inter.m->emit;
 
     if (get_random_float() < rr) {
         vec3 wi = inter.m->sample(inter.normal, -ray.dir);
@@ -90,12 +87,12 @@ vec3 Scene::castRay(const Ray &ray) {
         Ray obj_ray(inter.pos, wi);
         Intersection i = intersect(obj_ray);
         if (i.has && !intersect(obj_ray).m->has_emission) {
-            L_in_dir = castRay(obj_ray) * inter.m->eval(inter.normal, -ray.dir, wi, kd) / (pdf * rr);
+            L_in_dir = castRay(obj_ray) * inter.m->eval(inter.normal, -ray.dir, wi, kd, has_texture) / (pdf * rr);
         }
     }
-    vec3 color = L_dir + L_in_dir + inter.m->emit;
+    vec3 color = L_dir + L_in_dir;
     vec3 hit_color = {clamp(0.0f, 1.0f, color.x), clamp(0.0f, 1.0f, color.y), clamp(0.0f, 1.0f, color.z)};
-    return color;
+    return hit_color;
 }
 
 void Scene::build_bvh() {
@@ -169,7 +166,7 @@ void Scene::render(int spp) {
     // save framebuffer to file
 //    FILE *fp = fopen("binary.png", "wb");
 //    (void) fprintf(fp, "P6\n%d %d\n255\n", width, height);
-    const float gamma = 0.6;
+    const float gamma = 1.0 / 2.2;
     for (auto i = 0; i < height * width; ++i) {
         static unsigned char color[3];
         color[0] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].x), gamma));
