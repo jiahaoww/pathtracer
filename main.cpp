@@ -31,7 +31,7 @@ int main() {
     std::string model_name = name + ".obj";
     std::string xml_name = name + ".xml";
     std::string xml_path = base_path + xml_name;
-    Camera camera;
+    Camera camera{};
     std::map <std::string, vec3> light_emits = XML::load_xml(xml_path, camera);
     auto meshes = Loader::load(base_path, model_name, nullptr, light_emits);
 

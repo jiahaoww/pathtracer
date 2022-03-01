@@ -11,7 +11,8 @@
 
 enum MATERIAL_TYPE {
     DIFFUSE,
-    MICRO_FACET
+    MICRO_FACET,
+    MIRROR
 };
 
 class Material {

@@ -20,9 +20,7 @@ public:
         v_min = v0;
         v_max = v1;
     }
-    explicit AABB(const vec3& v) {
-        v_min = v_max = v;
-    }
+
     vec3 center() const {
         return (v_min + v_max) / 2.0f;
     }
@@ -66,7 +64,7 @@ public:
     static AABB Union(const AABB& box1, const AABB& box2) {
         vec3 p_min = {std::min(box1.v_min.x, box2.v_min.x), std::min(box1.v_min.y, box2.v_min.y), std::min(box1.v_min.z, box2.v_min.z)};
         vec3 p_max = {std::max(box1.v_max.x, box2.v_max.x), std::max(box1.v_max.y, box2.v_max.y), std::max(box1.v_max.z, box2.v_max.z)};
-        return {p_min, p_max};
+        return AABB(p_min, p_max);
     }
 };
 

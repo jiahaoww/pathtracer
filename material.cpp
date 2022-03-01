@@ -47,7 +47,7 @@ float G_schlick_ggx(const vec3& N, const vec3& v, const float& k) {
     return dot_nv / ((1 - k) * dot_nv + k);
 }
 
-Material::Material(): Kd(vec3(0.0f)), Ks(vec3(1.0f)), emit(vec3(0.0f)), ior(1.85f), shine_exponent(32.0f), map_kd(""), map_ks("") {
+Material::Material(): Kd(vec3(0.0f)), Ks(vec3(1.0f)), emit(vec3(0.0f)), ior(1.85f), shine_exponent(32.0f){
     has_emission = glm::length(emit) >= EPSILON;
     is_specular = glm::length(Ks) >= EPSILON;
     type = MATERIAL_TYPE::DIFFUSE;
@@ -104,10 +104,10 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3& K
         case MATERIAL_TYPE::DIFFUSE: {
             if (glm::dot(wi, N) > 0.0f) {
                 vec3 specular(0.0f);
-                vec3 diffuse = my_Kd * std::max(glm::dot(N, wi), 0.0f);
+                vec3 diffuse = my_Kd;
                 if(is_specular) {
                     vec3 reflect_dir = reflect(N, wi);
-                    specular = 1000.0f *  my_Ks * std::pow(std::max(glm::dot(wo, reflect_dir), 0.0f), shine_exponent);
+                    specular = my_Ks * std::pow(std::max(glm::dot(wo, reflect_dir), 0.0f), shine_exponent);
                 }
                 vec3 color = diffuse + specular;
                 return color / PI;

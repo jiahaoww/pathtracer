@@ -33,7 +33,7 @@ Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 n0, vec3 n1, vec3 n2, vec2 t0
 
     vec3 p_min = {std::min({v[0].x, v[1].x, v[2].x}), std::min({v[0].y, v[1].y, v[2].y}), std::min({v[0].z, v[1].z, v[2].z})};
     vec3 p_max = {std::max({v[0].x, v[1].x, v[2].x}), std::max({v[0].y, v[1].y, v[2].y}), std::max({v[0].z, v[1].z, v[2].z})};
-    bounding_box = {p_min, p_max};
+    bounding_box = AABB(p_min, p_max);
 }
 
 float Triangle::get_area() {

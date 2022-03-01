@@ -31,6 +31,31 @@ Intersection Scene::intersect(const Ray &ray) const {
     return bvh->intersect(ray);
 }
 
+vec3 get_intersection_color(Intersection& inter, bool& has_texture) {
+    if (inter.m->texture == nullptr) {
+        has_texture = false;
+        return inter.m->Kd;
+    }
+    has_texture = true;
+    vec2 tex_coord;
+    Object* object = inter.obj;
+    auto triangle = dynamic_cast<Triangle *>(object);
+    if (triangle == nullptr) {
+        throw std::bad_cast();
+    } else {
+        tex_coord = (float)(inter.b1) * triangle->tex[1] + (float)(inter.b2) * triangle->tex[2] + (float)(1.0f - inter.b1 - inter.b2) * triangle->tex[0];
+    }
+    int w = inter.m->texture->width;
+    int h = inter.m->texture->height;
+    int p = h * tex_coord.y;
+    int q = w * tex_coord.x;
+    p = (p % h + h ) % h;
+    p = h - 1 - p;
+    q = (q % w + w) % w;
+    glm::u8vec3 color = (*inter.m->texture)[p][q];
+    return {color.x / 255.0f, color.y / 255.0f, color.z / 255.0};
+}
+
 vec3 Scene::castRay(const Ray &ray) {
     Intersection inter = intersect(ray);
     if (!inter.has) {
@@ -39,6 +64,7 @@ vec3 Scene::castRay(const Ray &ray) {
     if (inter.m->has_emission) {
         return inter.m->emit;
     }
+    bool is_mirror = inter.m->type == MATERIAL_TYPE::MICRO_FACET && inter.m->metallic == 1.0f;
     vec3 L_dir(0.0f);
     vec3 L_in_dir(0.0f);
     Intersection light_inter;
@@ -46,48 +72,41 @@ vec3 Scene::castRay(const Ray &ray) {
     sample_light(light_inter, light_pdf);
     vec3 light_dir = glm::normalize(light_inter.pos - inter.pos);
     Ray light_ray(inter.pos, light_dir);
-    Intersection i = intersect(light_ray);
-    // not blocked
+    Intersection light_ray_inter = intersect(light_ray);
+//    if (inter.m->type == MIRROR) {
+//        vec3 reflect_dir = 2.0f * glm::dot(inter.normal, -ray.dir) * inter.normal + ray.dir;
+//        Ray reflect_ray = {inter.pos, reflect_dir};
+//        return castRay(reflect_ray);
+//    }
 
-    vec3 kd = inter.m->Kd;
     bool has_texture = false;
-    if (inter.m->texture != nullptr) {
-        has_texture = true;
-        vec2 tex_coord;
-        Object* object = inter.obj;
-        Triangle* triangle = dynamic_cast<Triangle *>(object);
-        if (triangle == nullptr) {
-            throw std::bad_cast();
-        } else {
-            tex_coord = (float)(inter.b1) * triangle->tex[1] + (float)(inter.b2) * triangle->tex[2] + (float)(1.0f - inter.b1 - inter.b2) * triangle->tex[0];
+    vec3 kd = get_intersection_color(inter, has_texture);
 
-        }
-        int w = inter.m->texture->width;
-        int h = inter.m->texture->height;
-        int p = h * tex_coord.y;
-        int q = w * tex_coord.x;
-        p = (p % h + h ) % h;
-        p = h - 1 - p;
-        q = (q % w + w) % w;
-
-
-        glm::u8vec3 color = (*inter.m->texture)[p][q];
-        kd = {color.x / 255.0f, color.y / 255.0f, color.z / 255.0};
-    }
-    if (i.has && i.obj == light_inter.obj) {
+    if (light_ray_inter.has && light_ray_inter.obj == light_inter.obj) {
         float d = glm::length(light_inter.pos - inter.pos);
-        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir, kd, has_texture) * light_inter.m->emit * std::max(glm::dot(light_inter.normal, -light_dir), 0.0f)
-                 / (d * d * light_pdf);
+        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir, kd, has_texture)
+                * light_inter.m->emit
+                * glm::dot(inter.normal, light_dir)
+                * glm::dot(light_inter.normal, -light_dir)
+                / (d * d * light_pdf);
     }
 
     if (get_random_float() < rr) {
         vec3 wi = inter.m->sample(inter.normal, -ray.dir);
-        wi = glm::normalize(wi);
         float pdf = inter.m->pdf(inter.normal, -ray.dir, wi);
         Ray obj_ray(inter.pos, wi);
-        Intersection i = intersect(obj_ray);
-        if (i.has && !intersect(obj_ray).m->has_emission) {
-            L_in_dir = castRay(obj_ray) * inter.m->eval(inter.normal, -ray.dir, wi, kd, has_texture) / (pdf * rr);
+        Intersection obj_ray_inter = intersect(obj_ray);
+        if (is_mirror) {
+            if (obj_ray_inter.has) {
+                L_in_dir = castRay(obj_ray)
+                           * inter.m->eval(inter.normal, -ray.dir, wi, kd, has_texture)
+                           * glm::dot(inter.normal, wi) / (pdf * rr);
+            }
+        } else if (obj_ray_inter.has && !obj_ray_inter.m->has_emission) {
+            L_in_dir = castRay(obj_ray)
+                       * inter.m->eval(inter.normal, -ray.dir, wi, kd, has_texture)
+                       * glm::dot(inter.normal, wi)
+                       / (pdf * rr);
         }
     }
     vec3 color = L_dir + L_in_dir;

@@ -41,14 +41,14 @@ public:
             vec3 Kd = {material.Kd.X, material.Kd.Y, material.Kd.Z};
             vec3 Ks = {material.Ks.X, material.Ks.Y, material.Ks.Z};
             if (mesh.MeshMaterial.name == "BackWall") {
-                materialType = MICRO_FACET;
+                // materialType = MIRROR;
                 Ks = {1.0f, 1.0f, 1.0f};
-                Kd = {0.8f, 0.8f, 0.8f};
+                // Kd = {0.8f, 0.8f, 0.8f};
             }
             Material* mym = new Material(materialType, Kd, Ks, emit, ior, shine_exponent, material.map_Kd, material.map_Ks);
             Material* tm = m == nullptr ? mym : m;
-            tm->roughness = 0.04;
-            tm->metallic = 1.0;
+            tm->roughness = 0.5;
+            tm->metallic = 0.0;
             if(mesh.MeshMaterial.map_Kd.size() > 0) {
                 // read texture
                 std::string texture_path = base_path + mesh.MeshMaterial.map_Kd;
