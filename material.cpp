@@ -9,6 +9,42 @@ vec3 reflect(const vec3& N, const vec3& dir) {
     return 2.0f * glm::dot(N, dir) * N - dir;
 }
 
+//vec3 refract(const vec3& N, const vec3& dir, const float& ior) {
+//    float cosi = glm::dot(N, dir);
+//    float etai = 1, etat = ior;
+//    vec3 n = N;
+//    if (cosi < 0) {
+//        cosi = -cosi;
+//        std::swap(etai, etat);
+//        n= -N;
+//    }
+//    float eta = etai / etat;
+//    float k = 1 - eta * eta * (1 - cosi * cosi);
+//    vec3 wt(0.0f);
+//    if (k > 0) {
+//        wt = normalize(eta * dir + (eta * cosi - sqrtf(k)) * n);
+//    }
+//    return wt;
+//}
+
+vec3 refract(const vec3 &N, const vec3 &I, const float &ior)
+{
+    float cosi = clamp(-1, 1, glm::dot(I, N));
+    float etai = 1, etat = ior;
+    vec3 n = N;
+    if (cosi < 0) { cosi = -cosi; } else { std::swap(etai, etat); n= -N; }
+    float eta = etai / etat;
+    float k = 1 - eta * eta * (1 - cosi * cosi);
+    vec3 wt(0.0f);
+    if (k > 0) {
+        wt = glm::normalize(eta * I + (eta * cosi - sqrtf(k)) * n);
+    }
+    // std::cout << wt.x << " " << wt.y <<  " " <<wt.z << std::endl;
+    return wt;
+    return k < 0 ? vec3(0.0f) : normalize(eta * I + (eta * cosi - sqrtf(k)) * n);
+}
+
+
 float fresnel(const vec3& N, const vec3& wo, float ior) {
     float ior1 = 1.0f;
     float ior2 = ior;
@@ -94,6 +130,9 @@ vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
         case MATERIAL_TYPE::MIRROR: {
             return reflect(N, wo);
         }
+        case MATERIAL_TYPE::GLASS: {
+            return refract(N, -wo, ior);
+        }
     }
 }
 
@@ -156,6 +195,19 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3& K
                 return vec3(0.0f);
             }
         }
+        case MATERIAL_TYPE::GLASS: {
+            vec3 wt = refract(N, -wo, ior);
+            if (glm::length(wt) < EPSILON) {
+                return vec3(0.0f);
+            } else {
+                if (wt == wi) {
+                   //  std::cout << "haha" << std::endl;
+                    return Ks / std::max(std::abs(glm::dot(wi, N)), EPSILON);
+                } else {
+                    return vec3(0.0f);
+                }
+            }
+        }
     }
 }
 
@@ -184,6 +236,14 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
         case MATERIAL_TYPE::MIRROR: {
             vec3 wr = reflect(N, wo);
             if (wr == wi) {
+                return 1.0f;
+            } else {
+                return EPSILON;
+            }
+        }
+        case MATERIAL_TYPE::GLASS: {
+            vec3 wt = refract(N, -wo, ior);
+            if (wt == wi) {
                 return 1.0f;
             } else {
                 return EPSILON;

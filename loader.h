@@ -40,10 +40,15 @@ public:
             float shine_exponent = material.Ns;
             vec3 Kd = {material.Kd.X, material.Kd.Y, material.Kd.Z};
             vec3 Ks = {material.Ks.X, material.Ks.Y, material.Ks.Z};
-            if (mesh.MeshMaterial.name == "BackWall") {
+            if (mesh.MeshMaterial.name == "Mirror") {
                 materialType = MIRROR;
                 Ks = {1.0f, 1.0f, 1.0f};
                 // Kd = {0.8f, 0.8f, 0.8f};
+            }
+            if (ior > 1.0f) {
+                std::cout << ior << std::endl;
+                Ks = { 1.0f, 1.0f, 1.0f };
+                materialType = GLASS;
             }
             Material* mym = new Material(materialType, Kd, Ks, emit, ior, shine_exponent, material.map_Kd, material.map_Ks);
             Material* tm = m == nullptr ? mym : m;

@@ -8,8 +8,8 @@
 
 
 int main() {
-    int model = 1;
-    int spp = 256;
+    int model = 3;
+    int spp = 16;
     std::string name;
     switch (model) {
         case 1: {

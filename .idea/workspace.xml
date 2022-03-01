@@ -28,8 +28,8 @@
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
-      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" />
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Release" ENABLED="true" CONFIG_NAME="Release" />
     </configurations>
   </component>
   <component name="ChangeListManager">
@@ -38,6 +38,7 @@
       <change beforePath="$PROJECT_DIR$/loader.h" beforeDir="false" afterPath="$PROJECT_DIR$/loader.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/material.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/material.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/material.h" beforeDir="false" afterPath="$PROJECT_DIR$/material.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/scene.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -86,19 +87,19 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="pathTracer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pathTracer" TARGET_NAME="pathTracer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pathTracer" RUN_TARGET_NAME="pathTracer">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="pathTracer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pathTracer" TARGET_NAME="pathTracer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pathTracer" RUN_TARGET_NAME="pathTracer">
       <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -124,7 +125,12 @@
       <workItem from="1646020807496" duration="1000" />
       <workItem from="1646025039941" duration="615000" />
       <workItem from="1646026274669" duration="24373000" />
-      <workItem from="1646055992726" duration="10789000" />
+      <workItem from="1646055992726" duration="10992000" />
+      <workItem from="1646143224183" duration="198000" />
+      <workItem from="1646143471149" duration="29000" />
+      <workItem from="1646143513265" duration="46000" />
+      <workItem from="1646143572481" duration="116000" />
+      <workItem from="1646143918414" duration="3992000" />
     </task>
     <servers />
   </component>
@@ -141,32 +147,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="1877" height="184" key="GridCell.Tab.0.bottom" timestamp="1646138911999">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1877" height="184" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1646138911999" />
-    <state width="1877" height="184" key="GridCell.Tab.0.center" timestamp="1646138911999">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1877" height="184" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1646138911999" />
-    <state width="1877" height="184" key="GridCell.Tab.0.left" timestamp="1646138911999">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1877" height="184" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1646138911999" />
-    <state width="1877" height="184" key="GridCell.Tab.0.right" timestamp="1646138911999">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1877" height="184" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1646138911999" />
-    <state x="461" y="164" key="SettingsEditor" timestamp="1646113566334">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1646113566334" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1646137732768">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1646137732768" />
   </component>
 </project>

@@ -105,12 +105,13 @@ vec3 Scene::castRay(const Ray &ray) {
         } else if (obj_ray_inter.has && !obj_ray_inter.m->has_emission) {
             L_in_dir = castRay(obj_ray)
                        * inter.m->eval(inter.normal, -ray.dir, wi, kd, has_texture)
-                       * glm::dot(inter.normal, wi)
+                       * std::abs(glm::dot(inter.normal, wi))
                        / (pdf * rr);
         }
     }
     vec3 color = L_dir + L_in_dir;
     vec3 hit_color = {clamp(0.0f, 1.0f, color.x), clamp(0.0f, 1.0f, color.y), clamp(0.0f, 1.0f, color.z)};
+    glm::clamp(color, 0.0f, 1.0f);
     return hit_color;
 }
 

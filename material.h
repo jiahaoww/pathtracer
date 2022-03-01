@@ -12,7 +12,8 @@
 enum MATERIAL_TYPE {
     DIFFUSE,
     MICRO_FACET,
-    MIRROR
+    MIRROR,
+    GLASS
 };
 
 class Material {
@@ -20,7 +21,7 @@ public:
     MATERIAL_TYPE type;
     float roughness = 0.1;
     float metallic = 0.0;
-    float ior;
+    float ior = 1.0;
     float shine_exponent;
     vec3 Kd;
     vec3 Ks;
