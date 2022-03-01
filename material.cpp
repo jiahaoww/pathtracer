@@ -91,6 +91,9 @@ vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
             vec3 wi = reflect(world_h, wo);
             return wi;
         }
+        case MATERIAL_TYPE::MIRROR: {
+            return reflect(N, wo);
+        }
     }
 }
 
@@ -145,6 +148,14 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3& K
                 return vec3(0.0f);
             }
         }
+        case MATERIAL_TYPE::MIRROR: {
+            vec3 wr = reflect(N, wo);
+            if (wr == wi) {
+                return Ks / std::max(glm::dot(wi, N), EPSILON);
+            } else {
+                return vec3(0.0f);
+            }
+        }
     }
 }
 
@@ -166,6 +177,14 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
                 float exp = (a2 - 1.0f) * cos_theta * cos_theta + 1.0f;
                 float D = a2 / (PI * exp * exp);
                 return D * cos_theta / (4.0f * std::max(glm::dot(wo, h), 0.0f) + EPSILON);
+            } else {
+                return EPSILON;
+            }
+        }
+        case MATERIAL_TYPE::MIRROR: {
+            vec3 wr = reflect(N, wo);
+            if (wr == wi) {
+                return 1.0f;
             } else {
                 return EPSILON;
             }

@@ -9,7 +9,7 @@
 
 int main() {
     int model = 1;
-    int spp = 16;
+    int spp = 256;
     std::string name;
     switch (model) {
         case 1: {

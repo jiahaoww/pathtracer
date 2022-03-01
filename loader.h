@@ -41,7 +41,7 @@ public:
             vec3 Kd = {material.Kd.X, material.Kd.Y, material.Kd.Z};
             vec3 Ks = {material.Ks.X, material.Ks.Y, material.Ks.Z};
             if (mesh.MeshMaterial.name == "BackWall") {
-                // materialType = MIRROR;
+                materialType = MIRROR;
                 Ks = {1.0f, 1.0f, 1.0f};
                 // Kd = {0.8f, 0.8f, 0.8f};
             }

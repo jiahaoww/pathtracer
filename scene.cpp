@@ -64,7 +64,7 @@ vec3 Scene::castRay(const Ray &ray) {
     if (inter.m->has_emission) {
         return inter.m->emit;
     }
-    bool is_mirror = inter.m->type == MATERIAL_TYPE::MICRO_FACET && inter.m->metallic == 1.0f;
+    bool is_mirror = inter.m->type == MATERIAL_TYPE::MIRROR;
     vec3 L_dir(0.0f);
     vec3 L_in_dir(0.0f);
     Intersection light_inter;
