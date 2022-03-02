@@ -40,20 +40,25 @@ public:
             float shine_exponent = material.Ns;
             vec3 Kd = {material.Kd.X, material.Kd.Y, material.Kd.Z};
             vec3 Ks = {material.Ks.X, material.Ks.Y, material.Ks.Z};
+
+            if (shine_exponent > 100.0f) {
+                materialType = MIRROR;
+                Ks = {1.0f, 1.0f, 1.0f};
+                // Kd = {0.8f, 0.8f, 0.8f};
+            }
             if (mesh.MeshMaterial.name == "Mirror") {
                 materialType = MIRROR;
                 Ks = {1.0f, 1.0f, 1.0f};
                 // Kd = {0.8f, 0.8f, 0.8f};
             }
             if (ior > 1.0f) {
-                std::cout << ior << std::endl;
                 Ks = { 1.0f, 1.0f, 1.0f };
                 materialType = GLASS;
             }
             Material* mym = new Material(materialType, Kd, Ks, emit, ior, shine_exponent, material.map_Kd, material.map_Ks);
             Material* tm = m == nullptr ? mym : m;
-            tm->roughness = 0.5;
-            tm->metallic = 0.0;
+            tm->roughness = 0.1;
+            tm->metallic = 1.0;
             if(mesh.MeshMaterial.map_Kd.size() > 0) {
                 // read texture
                 std::string texture_path = base_path + mesh.MeshMaterial.map_Kd;
@@ -67,7 +72,7 @@ public:
                 for (int j = 0; j < 3; j++) {
                     vertices[j] = {mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y, mesh.Vertices[i + j].Position.Z};
                     normals[j] =  {mesh.Vertices[i + j].Normal.X,mesh.Vertices[i + j].Normal.Y,mesh.Vertices[i + j].Normal.Z};
-                    texture_coords[j] = {mesh.Vertices[i + j].TextureCoordinate.X - (int)mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y - (int)mesh.Vertices[i + j].TextureCoordinate.Y};
+                    texture_coords[j] = {mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y};
                 }
                 Object* triangle = new Triangle(vertices[0], vertices[1], vertices[2], normals[0], normals[1], normals[2], texture_coords[0], texture_coords[1], texture_coords[2], tm);
                 triangle_list.push_back(triangle);
@@ -75,6 +80,23 @@ public:
             meshes.push_back(triangle_list);
         }
         return meshes;
+    }
+
+    static std::vector<Object*> load_single_mesh(std::string filepath, Material* m) {
+        objl::Loader loader;
+        loader.LoadFile(filepath);
+        std::vector<Object*> objects;
+        auto mesh = loader.LoadedMeshes[0];
+        for(int i = 0; i < mesh.Vertices.size(); i+=3) {
+            vec3 vertices[3];
+
+            for (int j = 0; j < 3; j++) {
+                vertices[j] = {mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y, mesh.Vertices[i + j].Position.Z};
+            }
+            Object* triangle = new Triangle(vertices[0], vertices[1], vertices[2],  m);
+            objects.push_back(triangle);
+        }
+        return objects;
     }
 };
 

@@ -15,7 +15,7 @@ float Mesh::get_area() {
     return bvh->root->area;
 }
 
-Intersection Mesh::get_interaction(const Ray &ray) {
+Intersection Mesh::get_intersection(const Ray &ray) {
     return bvh->intersect(ray);
 }
 

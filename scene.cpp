@@ -64,7 +64,7 @@ vec3 Scene::castRay(const Ray &ray) {
     if (inter.m->has_emission) {
         return inter.m->emit;
     }
-    bool is_mirror = inter.m->type == MATERIAL_TYPE::MIRROR;
+    bool is_mirror = inter.m->type == MATERIAL_TYPE::MIRROR || inter.m->type == MATERIAL_TYPE::GLASS;
     vec3 L_dir(0.0f);
     vec3 L_in_dir(0.0f);
     Intersection light_inter;
@@ -73,11 +73,6 @@ vec3 Scene::castRay(const Ray &ray) {
     vec3 light_dir = glm::normalize(light_inter.pos - inter.pos);
     Ray light_ray(inter.pos, light_dir);
     Intersection light_ray_inter = intersect(light_ray);
-//    if (inter.m->type == MIRROR) {
-//        vec3 reflect_dir = 2.0f * glm::dot(inter.normal, -ray.dir) * inter.normal + ray.dir;
-//        Ray reflect_ray = {inter.pos, reflect_dir};
-//        return castRay(reflect_ray);
-//    }
 
     bool has_texture = false;
     vec3 kd = get_intersection_color(inter, has_texture);
@@ -100,7 +95,8 @@ vec3 Scene::castRay(const Ray &ray) {
             if (obj_ray_inter.has) {
                 L_in_dir = castRay(obj_ray)
                            * inter.m->eval(inter.normal, -ray.dir, wi, kd, has_texture)
-                           * glm::dot(inter.normal, wi) / (pdf * rr);
+                           * std::abs(glm::dot(inter.normal, wi))
+                           / (pdf * rr);
             }
         } else if (obj_ray_inter.has && !obj_ray_inter.m->has_emission) {
             L_in_dir = castRay(obj_ray)
@@ -114,6 +110,63 @@ vec3 Scene::castRay(const Ray &ray) {
     glm::clamp(color, 0.0f, 1.0f);
     return hit_color;
 }
+
+vec3 Scene::castRay1(const Ray &ray) {
+    Intersection inter = intersect(ray);
+    if (!inter.has) {
+        return vec3(0.0f);
+    }
+    if (inter.m->has_emission) {
+        return inter.m->emit;
+    }
+    bool is_mirror = inter.m->type != DIFFUSE;
+    vec3 L_dir(0.0f);
+    vec3 L_in_dir(0.0f);
+    Intersection light_inter;
+    float light_pdf = 0.0f;
+    sample_light(light_inter, light_pdf);
+    vec3 light_dir = glm::normalize(light_inter.pos - inter.pos);
+    Ray light_ray(inter.pos, light_dir);
+    Intersection light_ray_inter = intersect(light_ray);
+
+    bool has_texture = false;
+    vec3 kd = get_intersection_color(inter, has_texture);
+
+    if (light_ray_inter.has && light_ray_inter.obj == light_inter.obj) {
+        float d = glm::length(light_inter.pos - inter.pos);
+        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir, kd, has_texture)
+                * light_inter.m->emit
+                * glm::dot(inter.normal, light_dir)
+                * glm::dot(light_inter.normal, -light_dir)
+                / (d * d * light_pdf);
+    }
+
+    if (get_random_float() < rr) {
+        vec3 wi;
+        float pdf;
+        vec3 bsdf = inter.m->sample_f(inter.normal, -ray.dir, wi, pdf, kd, has_texture);
+        Ray obj_ray(inter.pos, wi);
+        Intersection obj_ray_inter = intersect(obj_ray);
+        if (is_mirror) {
+            if (obj_ray_inter.has) {
+                L_in_dir = castRay1(obj_ray)
+                           * bsdf
+                           * std::abs(glm::dot(inter.normal, wi))
+                           / (pdf * rr);
+            }
+        } else if (obj_ray_inter.has && !obj_ray_inter.m->has_emission) {
+            L_in_dir = castRay1(obj_ray)
+                       * bsdf
+                       * std::abs(glm::dot(inter.normal, wi))
+                       / (pdf * rr);
+        }
+    }
+    vec3 color = L_dir + L_in_dir;
+    vec3 hit_color = {clamp(0.0f, 1.0f, color.x), clamp(0.0f, 1.0f, color.y), clamp(0.0f, 1.0f, color.z)};
+    glm::clamp(color, 0.0f, 1.0f);
+    return hit_color;
+}
+
 
 void Scene::build_bvh() {
     std::cout << "start building scene BVH" << std::endl;
@@ -173,7 +226,7 @@ void Scene::render(int spp) {
                         float y = (1 - 2 * (j + get_random_float()) / (float)height) * scale;
 
                         vec3 dir = glm::normalize(inverse_view * vec4(vec3(x, y, -1.0f), 0.0f));
-                        frame_buffer[j * width + i] += castRay(Ray(camera.eye, dir)) / (float)spp;
+                        frame_buffer[j * width + i] += castRay1(Ray(camera.eye, dir)) / (float)spp;
                     }
                 }
             }, begin_offset, end_offset);

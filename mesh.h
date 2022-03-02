@@ -13,7 +13,7 @@ public:
 public:
     explicit Mesh(const std::vector<Object*>& objects);
     float get_area() override;
-    Intersection get_interaction(const Ray& ray) override;
+    Intersection get_intersection(const Ray& ray) override;
     void sample(Intersection& inter, float& pdf) override;
 
 };

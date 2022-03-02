@@ -51,8 +51,9 @@ float fresnel(const vec3& N, const vec3& wo, float ior) {
     float cos_theta1 = glm::dot(wo, N);
     if (cos_theta1 < 0.0f) {
         std::swap(ior1, ior2);
+        cos_theta1 = -cos_theta1;
     }
-    cos_theta1 = -cos_theta1;
+
     float sin_theta1 = std::sqrt(1.0f - cos_theta1 * cos_theta1);
     float sin_theta2 = sin_theta1 * ior1 / ior2;
     if (sin_theta2 > 1.0f) {
@@ -97,6 +98,7 @@ Material::Material(MATERIAL_TYPE t, const vec3 &kd, const vec3 &ks, const vec3 &
 }
 
 vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
+    std::cout << "sample" << std::endl;
     switch (type) {
         case MATERIAL_TYPE::DIFFUSE: {
             float x1 = get_random_float();
@@ -248,6 +250,105 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
             } else {
                 return EPSILON;
             }
+        }
+    }
+}
+
+vec3 Material::sample_f(const vec3 &N, const vec3& wo, vec3& wi, float &pdf, const vec3& KD, bool has_texture) const {
+    vec3 my_Kd = KD;
+    if (has_texture) {
+        my_Kd = sdr2ldr(KD);
+    }
+    vec3 my_Ks = Ks;
+    switch (type) {
+        case MATERIAL_TYPE::DIFFUSE: {
+            float x1 = get_random_float();
+            float x2 = get_random_float();
+            float z = std::abs(1.0f - 2.0f * x1);
+            float r = std::sqrt(1.0f - z * z);
+            float phi = x2 * 2.0f * PI;
+            float x = r * std::cos(phi);
+            float y = r * std::sin(phi);
+            vec3 local_wi = {x, y, z};
+            vec3 world_wi = toWorld(local_wi, N);
+            // set wi
+            wi = world_wi;
+            // set pdf
+            if (glm::dot(wi, N) > 0.0f) {
+                pdf = 0.5f / PI;
+                return my_Kd / PI;
+            } else {
+                pdf = EPSILON;
+                return vec3(0.0f);
+            }
+        }
+        case MATERIAL_TYPE::MICRO_FACET: {
+            float x1 = get_random_float();
+            float x2 = get_random_float();
+            float a = roughness * roughness;
+            float a2 = a * a;
+            float theta = std::acos(std::sqrt((1.0f - x1) / (x1 * (a2 - 1.0f) + 1.0f)));
+            float phi = x2 * 2.0f * PI;
+
+            float z = std::cos(theta);
+            float r = std::sqrt(1.0f - z * z);
+            float x = r * std::cos(phi);
+            float y = r * std::sin(phi);
+            vec3 local_h = {x, y, z};
+            vec3 world_h = toWorld(local_h, N);
+            // set wi
+            wi = reflect(world_h, wo);
+
+            if (glm::dot(wi, N) > 0.0f) {
+                float cos1 = std::max(glm::dot(N, wi), 0.0f);
+                vec3 h = glm::normalize(wo + wi);
+                float cos_theta = std::max(glm::dot(h, N), EPSILON);
+                float exp = (a2 - 1.0f) * cos_theta * cos_theta + 1.0f;
+                float D = a2 / (PI * exp * exp);
+                // set pdf
+                pdf = D * cos_theta / (4.0f * std::max(glm::dot(wo, h), 0.0f) + EPSILON);
+
+                float k = (roughness + 1.0f) * (roughness + 1.0f) / 8.0f;
+                float G = G_schlick_ggx(N, wo, k) * G_schlick_ggx(N, wi, k);
+
+                vec3 F0(0.04);
+                F0 = F0 * (1 - metallic) + metallic * my_Kd;
+                vec3 F = F0 + std::pow(1.0f - cos1, 5.0f) * (vec3(1.0f) - F0);
+                vec3 f_cook_torrance =
+                        D * F * G / (4 * std::max(glm::dot(wo, N), 0.0f) * std::max(glm::dot(wi, N), 0.0f) + EPSILON);
+                vec3 _kd = (vec3(1.0f) - F) * (1 - metallic);
+                return _kd * my_Kd / PI + my_Ks * f_cook_torrance;
+            } else {
+                // set pdf
+                pdf = EPSILON;
+                return vec3(0.0f);
+            }
+        }
+        case MATERIAL_TYPE::MIRROR: {
+            wi = reflect(N, wo);
+            pdf = 1.0f;
+            return my_Ks / std::max(glm::dot(wi, N), EPSILON);
+        }
+        case MATERIAL_TYPE::GLASS: {
+            float f = fresnel(N, wo, ior);
+            if (f == 1.0f) {
+                wi = reflect(N, wo);
+                pdf = 1.0f;
+                return my_Ks / std::max(glm::dot(wi, N), EPSILON);
+            }
+            float p = get_random_float();
+            if (p <= f) {
+                // reflect
+                wi = reflect(N, wo);
+                pdf = f;
+                return my_Ks * f/ std::max(glm::dot(wi, N), EPSILON);
+            } else {
+                // refract
+                wi = refract(N, -wo, ior);
+                pdf = 1.0f - f;
+                return my_Ks * (1.0f - f)/ std::max(std::abs(glm::dot(wi, N)), EPSILON);
+            }
+
         }
     }
 }

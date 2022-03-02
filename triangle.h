@@ -22,7 +22,7 @@ public:
     Triangle(vec3 v0, vec3 v1, vec3 v2, Material* m);
     Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 n0, vec3 n1, vec3 n2, vec2 t0, vec2 t1, vec2 t2, Material *mtl);
     float get_area() override;
-    Intersection get_interaction(const Ray& ray) override;
+    Intersection get_intersection(const Ray& ray) override;
     void sample(Intersection& inter, float& pdf) override;
 };
 

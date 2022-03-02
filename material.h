@@ -37,6 +37,7 @@ public:
     vec3 sample(const vec3& N, const vec3& wo) const;
     vec3 eval(const vec3& N, const vec3& wo, const vec3& wi, const vec3& KD, bool has_texture) const;
     float pdf(const vec3& N, const vec3& wo, const vec3& wi) const;
+    vec3 sample_f(const vec3 & N, const vec3& wo, vec3& wi, float& pdf, const vec3& KD, bool has_texture) const;
 };
 
 #endif //PATHTRACER_MATERIAL_H

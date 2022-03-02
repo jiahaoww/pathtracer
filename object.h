@@ -18,6 +18,6 @@ public:
     }
     virtual float get_area() = 0;
     virtual void sample(Intersection& inter, float& pdf) = 0;
-    virtual Intersection get_interaction(const Ray& ray) = 0;
+    virtual Intersection get_intersection(const Ray& ray) = 0;
 };
 #endif //PATHTRACER_OBJECT_H

@@ -40,7 +40,7 @@ float Triangle::get_area() {
     return glm::length(glm::cross(e1, e2)) * 0.5f;
 }
 
-Intersection Triangle::get_interaction(const Ray &ray) {
+Intersection Triangle::get_intersection(const Ray &ray) {
     Intersection inter;
 //    if (glm::dot(ray.dir, normal) > 0.0f) {
 //        return inter;
@@ -64,7 +64,7 @@ Intersection Triangle::get_interaction(const Ray &ray) {
     }
 
     double t = glm::dot(s2, e2) * inv_s1dote1;
-    if (t < EPSILON) {
+    if (t < 1e-2) {
         return inter;
     }
 

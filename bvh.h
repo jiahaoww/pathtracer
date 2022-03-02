@@ -93,7 +93,7 @@ public:
         }
 
         if (node->left == nullptr && node->right == nullptr) {
-            return node->obj->get_interaction(ray);
+            return node->obj->get_intersection(ray);
         } else {
             Intersection inter_left = get_intersection(node->left, ray);
             Intersection inter_right = get_intersection(node->right, ray);

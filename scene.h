@@ -32,5 +32,6 @@ public:
     Intersection intersect(const Ray& ray) const;
     void sample_light(Intersection& inter, float& pdf);
     vec3 castRay(const Ray& ray);
+    vec3 castRay1(const Ray& ray);
 };
 #endif //PATHTRACER_SCENE_H
