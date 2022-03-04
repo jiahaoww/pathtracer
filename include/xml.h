@@ -7,7 +7,7 @@
 #include <map>
 #include <string>
 #include "global.h"
-#include <xml/pugixml.cpp>
+#include "xml/pugixml.cpp"
 #include <sstream>
 #include "camera.h"
 

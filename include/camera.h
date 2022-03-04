@@ -17,7 +17,7 @@ public:
 public:
     Camera() = default;
     Camera(vec3 e, vec3 center, vec3 world_up, float fov, int w, int h): eye(e), look_at(center), up(world_up), fov(fov), width(w), height(h) {}
-    mat4 get_view_matrix() {
+    mat4 get_view_matrix() const {
         return glm::lookAt(eye, look_at, up);
     }
 };

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
 class Texture {
     std::vector<glm::u8vec3> image;

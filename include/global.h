@@ -6,8 +6,8 @@
 #define PATHTRACER_GLOBAL_H
 
 #include <cmath>
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
+#include "glm/glm.hpp"
+#include "glm/ext.hpp"
 #include <random>
 #include <iostream>
 

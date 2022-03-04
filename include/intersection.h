@@ -29,6 +29,7 @@ public:
         obj = nullptr;
         m = nullptr;
         t = std::numeric_limits<double>::infinity();
+        b1 = b2 = 0.0f;
     }
 };
 

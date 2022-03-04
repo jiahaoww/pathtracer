@@ -8,8 +8,6 @@ Sphere::Sphere(vec3 c, float r): center(c), radius(r) {
     vec3 v_min = c - vec3(r);
     vec3 v_max = c + vec3(r);
     bounding_box = {v_min, v_max};
-    std::cout << v_min.x << " " << v_min.y << " " << v_min.z << std::endl;
-    std::cout << v_max.x << " " << v_max.y << " " << v_max.z << std::endl;
 }
 
 float Sphere::get_area() {
@@ -55,13 +53,11 @@ Intersection Sphere::get_intersection(const Ray &ray) {
         }
         if (t < 0.1f)
             return inter;
-        // std::cout << "haha" << std::endl;
         inter.pos = ray.ori + t * ray.dir;
         inter.has = true;
         inter.m = m;
         inter.normal = glm::normalize(inter.pos - center);
         inter.obj = this;
-        // inter.emit = m->emit;
         inter.t = t;
         return inter;
 
