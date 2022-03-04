@@ -12,6 +12,7 @@ class EmbreeAccelerator {
     RTCDevice m_device;
     RTCScene m_scene;
     bool m_init_flag = false;
+    float t_near = 1e-3;
 
 public:
     EmbreeAccelerator() {
@@ -65,7 +66,7 @@ public:
         result.ray.dir_x = ray.dir.x;
         result.ray.dir_y = ray.dir.y;
         result.ray.dir_z = ray.dir.z;
-        result.ray.tnear = 1e-2;
+        result.ray.tnear = 1e-3;
         result.ray.tfar = std::numeric_limits<float>::infinity();
         result.hit.geomID = RTC_INVALID_GEOMETRY_ID;
 
@@ -76,11 +77,11 @@ public:
         if (result.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
             Triangle* face = m_faces.at(result.hit.geomID);
             inter.has = true;
-            inter.normal = face->normal;
-            //inter.normal = (float)b1 * vn[1] + (float)b2 * vn[2] + (float)(1.0f - b1 - b2) * (vn[0]);
+            // inter.normal = face->normal;
+            inter.normal = glm::normalize(result.hit.u * face->vn[1] + result.hit.v * face->vn[2] + (1.0f - result.hit.u - result.hit.v) * face->vn[0]);
             inter.obj = face;
             inter.m = face->m;
-            inter.pos = ray.ori + ray.dir * (float)result.ray.tfar;;
+            inter.pos = ray.ori + ray.dir * result.ray.tfar;;
             inter.t = result.ray.tfar;
             inter.b1 = result.hit.u;
             inter.b2 = result.hit.v;

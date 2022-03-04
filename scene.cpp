@@ -43,6 +43,7 @@ void Scene::sample_light(Intersection &inter, float &pdf) {
             current_light_area += obj->get_area();
             if (current_light_area >= area) {
                 obj->sample(inter, pdf);
+                pdf *= obj->get_area() / light_area;
                 break;
             }
         }
@@ -74,7 +75,10 @@ vec3 get_intersection_color(Intersection& inter, bool& has_texture) {
     return {color.x / 255.0f, color.y / 255.0f, color.z / 255.0};
 }
 
-vec3 Scene::castRay(const Ray &ray) {
+vec3 Scene::castRay(const Ray &ray, int depth) {
+    if (depth > max_depth) {
+        return vec3(0.0f);
+    }
     Intersection inter = intersect(ray);
     if (!inter.has) {
         return vec3(0.0f);
@@ -119,7 +123,7 @@ vec3 Scene::castRay(const Ray &ray) {
     }
 
 
-    L_in_dir = castRay(obj_ray)
+    L_in_dir = castRay(obj_ray, depth + 1)
                * inter.m->eval(inter.normal, -ray.dir, wi, kd)
                * std::abs(glm::dot(inter.normal, wi))
                / (pdf * rr);
@@ -136,7 +140,7 @@ vec3 Scene::castRay_merge(const Ray &ray) {
     if (inter.m->has_emission) {
         return inter.m->emit;
     }
-    bool is_mirror = inter.m->type != DIFFUSE;
+    bool is_mirror = false;
     vec3 L_dir(0.0f), L_in_dir(0.0f);
     Intersection light_inter;
     float light_pdf;

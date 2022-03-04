@@ -39,7 +39,7 @@ public:
                 }
             }
 
-            auto materialType = PHONG;
+            auto materialType = DIFFUSE;
 
 
             float ior = material.Ni;
@@ -47,11 +47,9 @@ public:
             vec3 Kd = {material.Kd.X, material.Kd.Y, material.Kd.Z};
             vec3 Ks = {material.Ks.X, material.Ks.Y, material.Ks.Z};
 
-//            if (shine_exponent > 100.0f) {
-//                materialType = MIRROR;
-//                Ks = {1.0f, 1.0f, 1.0f};
-//                // Kd = {0.8f, 0.8f, 0.8f};
-//            }
+            if (shine_exponent > 1.0f) {
+                materialType = PHONG;
+            }
 
             if (ior > 1.0f) {
                 Ks = {1.0f, 1.0f, 1.0f};
@@ -79,6 +77,7 @@ public:
                                    mesh.Vertices[i + j].Position.Z};
                     normals[j] = {mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y,
                                   mesh.Vertices[i + j].Normal.Z};
+                    normals[j] = glm::normalize(normals[j]);
                     texture_coords[j] = {mesh.Vertices[i + j].TextureCoordinate.X,
                                          mesh.Vertices[i + j].TextureCoordinate.Y};
                 }

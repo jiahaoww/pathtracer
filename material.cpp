@@ -104,7 +104,7 @@ vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
             float x2 = get_random_float();
             float theta = std::acos(std::pow(x1, 1.0f / (shine_exponent + 1.0f)));
             float t = std::pow(x1, 2.0f / (shine_exponent + 1.0f));
-            float z = std::sqrt(t);
+            float z = std::cos(theta);
             float r = std::sqrt(1.0f - z * z);
             float phi = x2 * 2.0f * PI;
             float x = r * std::cos(phi);
@@ -237,14 +237,9 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
         }
         case MATERIAL_TYPE::PHONG: {
             if (glm::dot(wi, N) > 0.0f) {
-
                 vec3 reflect_dir = reflect(N, wo);
-
                 float cos_phi = glm::dot(reflect_dir, wi);
-                return std::pow(cos_phi, shine_exponent) * (shine_exponent + 2.0f) / (2.0f * PI);
-                float theta = std::acos(glm::dot(wi, reflect_dir));
-                // return std::pow(std::cos(theta), shine_exponent + 1.0f) * std::sin(theta) * (shine_exponent + 2.0f) / (2.0f * PI);
-
+                return std::pow(cos_phi, shine_exponent) * (shine_exponent + 1.0f) / (2.0f * PI) + EPSILON;
             } else {
                 return EPSILON;
             }

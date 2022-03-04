@@ -28,38 +28,21 @@
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
-      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake" />
-      <configuration PROFILE_NAME="Release" ENABLED="true" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=F:/1/vcpkg-master/vcpkg-master/scripts/buildsystems/vcpkg.cmake" />
+      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=F:/1/vcpkg-master/vcpkg-master/scripts/buildsystems/vcpkg.cmake" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="692cf308-8406-415b-9898-d90007c1b299" name="Changes" comment="Changes">
-      <change afterPath="$PROJECT_DIR$/include/renderer.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/renderer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OBJ_Loader.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/OBJ_Loader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OBJ_Loader.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Texture.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Texture.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aabb.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/aabb.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bvh.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/bvh.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/camera.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gallery/bedroom.png" beforeDir="false" afterPath="$PROJECT_DIR$/gallery/bedroom.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/global.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/intersection.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/intersection.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/loader.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/loader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gallery/bedroom1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/EmbreeAccelerator.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/EmbreeAccelerator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/loader.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/loader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/scene.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/scene.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/material.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/material.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/material.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/material.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mesh.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/mesh.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/object.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/object.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ray.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ray.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/renderer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/scene.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scene.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/scene.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphere.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/sphere.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphere.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/sphere.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/triangle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/triangle.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/xml.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,14 +100,19 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="pathTracer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pathTracer" TARGET_NAME="pathTracer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pathTracer" RUN_TARGET_NAME="pathTracer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="pathTracer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pathTracer" TARGET_NAME="pathTracer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pathTracer" RUN_TARGET_NAME="pathTracer">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -174,5 +162,28 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1877" height="249" key="GridCell.Tab.0.bottom" timestamp="1646383130279">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="249" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1646383130279" />
+    <state width="1877" height="249" key="GridCell.Tab.0.center" timestamp="1646383130279">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="249" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1646383130279" />
+    <state width="1877" height="249" key="GridCell.Tab.0.left" timestamp="1646383130279">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="249" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1646383130279" />
+    <state width="1877" height="249" key="GridCell.Tab.0.right" timestamp="1646383130279">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="249" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1646383130279" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1646371568676">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1646371568676" />
   </component>
 </project>

@@ -10,8 +10,8 @@
 
 
 int main() {
-    int model = 2;
-    int spp = 2048;
+    int model = 3;
+    int spp = 64;
     std::string name;
     switch (model) {
         case 1: {

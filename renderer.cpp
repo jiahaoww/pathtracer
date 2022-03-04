@@ -41,7 +41,7 @@ void Renderer::render(int spp) {
                         float y = (1 - 2 * (j + get_random_float()) / (float)height) * scale;
 
                         vec3 dir = glm::normalize(inverse_view * vec4(vec3(x, y, -1.0f), 0.0f));
-                        frame_buffer[j * width + i] += glm::clamp(scene.castRay(Ray(camera.eye, dir)), 0.0f, 1.0f) / (float)spp;
+                        frame_buffer[j * width + i] += glm::clamp(scene.castRay(Ray(camera.eye, dir), 0), 0.0f, 1.0f) / (float)spp;
                     }
                 }
             }, begin_offset, end_offset);
