@@ -35,12 +35,8 @@
   <component name="ChangeListManager">
     <list default="true" id="692cf308-8406-415b-9898-d90007c1b299" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/EmbreeAccelerator.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/EmbreeAccelerator.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/loader.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/loader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/scene.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/scene.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/material.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/material.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/veach-mis/veach-mis.xml" beforeDir="false" afterPath="$PROJECT_DIR$/models/veach-mis/veach-mis.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/scene.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -99,14 +95,14 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="pathTracer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pathTracer" TARGET_NAME="pathTracer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pathTracer" RUN_TARGET_NAME="pathTracer">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="pathTracer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pathTracer" TARGET_NAME="pathTracer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pathTracer" RUN_TARGET_NAME="pathTracer">
       <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -142,6 +138,7 @@
       <workItem from="1646366394351" duration="1000" />
       <workItem from="1646638790752" duration="25589000" />
       <workItem from="1646889376299" duration="17250000" />
+      <workItem from="1646911599990" duration="5261000" />
     </task>
     <servers />
   </component>
@@ -165,22 +162,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="683" y="320" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1646642444483" />
-    <state width="1877" height="249" key="GridCell.Tab.0.bottom" timestamp="1646910798381">
+    <state width="938" height="248" key="GridCell.Tab.0.bottom" timestamp="1646916829073">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="249" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1646910798381" />
-    <state width="1877" height="249" key="GridCell.Tab.0.center" timestamp="1646910798381">
+    <state width="938" height="248" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1646916829073" />
+    <state width="938" height="248" key="GridCell.Tab.0.center" timestamp="1646916829073">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="249" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1646910798381" />
-    <state width="1877" height="249" key="GridCell.Tab.0.left" timestamp="1646910798381">
+    <state width="938" height="248" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1646916829073" />
+    <state width="938" height="248" key="GridCell.Tab.0.left" timestamp="1646916829073">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="249" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1646910798381" />
-    <state width="1877" height="249" key="GridCell.Tab.0.right" timestamp="1646910798381">
+    <state width="938" height="248" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1646916829073" />
+    <state width="938" height="248" key="GridCell.Tab.0.right" timestamp="1646916829073">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="249" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1646910798381" />
+    <state width="938" height="248" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1646916829073" />
     <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1646641727146">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

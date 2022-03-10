@@ -169,7 +169,6 @@ vec3 Scene::castRay(const Ray &ray, int depth) {
                    / (pdf * rr);
 
         vec3 color = L_dir_light + L_in_dir;
-        return color;
         return glm::clamp(color, 0.0f, 1.0f);
     }
 }
