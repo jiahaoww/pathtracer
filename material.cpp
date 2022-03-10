@@ -104,7 +104,7 @@ vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
             float x2 = get_random_float();
             float theta = std::acos(std::pow(x1, 1.0f / (shine_exponent + 1.0f)));
             float t = std::pow(x1, 2.0f / (shine_exponent + 1.0f));
-            float z = std::cos(theta);
+            float z = std::sqrt(t);
             float r = std::sqrt(1.0f - z * z);
             float phi = x2 * 2.0f * PI;
             float x = r * std::cos(phi);
@@ -268,10 +268,10 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
         case MATERIAL_TYPE::GLASS: {
             float f = fresnel(N, wo, ior);
             if (wi == reflect(N, wo)) {
-                return f;
+                return f + EPSILON;
             }
             if (wi == refract(N, wo, ior)) {
-                return 1.0f - f;
+                return 1.0f - f +  EPSILON;
             }
             return EPSILON;
         }

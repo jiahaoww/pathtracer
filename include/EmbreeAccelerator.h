@@ -12,7 +12,7 @@ class EmbreeAccelerator {
     RTCDevice m_device;
     RTCScene m_scene;
     bool m_init_flag = false;
-    float t_near = 1e-3;
+    float t_near = 1e-2;
 
 public:
     EmbreeAccelerator() {

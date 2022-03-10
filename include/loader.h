@@ -56,6 +56,11 @@ public:
                 materialType = GLASS;
             }
 
+            if (mesh.MeshMaterial.name == "BackWall") {
+//                materialType = MIRROR;
+//                Ks = {1.0f, 1.0f, 1.0f};
+            }
+
             Material *mym = new Material(materialType, Kd, Ks, emit, ior, shine_exponent, material.map_Kd,
                                          material.map_Ks);
             Material *tm = m == nullptr ? mym : m;
@@ -85,7 +90,7 @@ public:
                                                   normals[2], texture_coords[0], texture_coords[1], texture_coords[2],
                                                   tm);
 
-                std::vector<Triangle *> one_face = {triangle};
+                std::vector<Triangle *> one_face = { triangle };
                 accelerator.add_faces(one_face);
                 triangle_list.push_back(triangle);
             }

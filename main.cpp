@@ -11,7 +11,7 @@
 
 int main() {
     int model = 3;
-    int spp = 64;
+    int spp = 512;
     std::string name;
     switch (model) {
         case 1: {
@@ -124,8 +124,11 @@ int main() {
 //    scene.add_obj(&metal_sphere);
 //    scene.build_bvh();
 //
+//    Renderer render(scene);
+//
 //    auto start = std::chrono::system_clock::now();
-//    scene.render(16);
+//    render.render(16);
+//    render.write_to_file("cornell.png");
 //    auto stop = std::chrono::system_clock::now();
 //
 //    std::cout << "Render complete: \n";

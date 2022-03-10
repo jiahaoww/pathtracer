@@ -16,7 +16,7 @@ public:
     int width;
     int height;
     float rr = 0.8;
-    int max_depth = 100;
+    int max_depth = 10;
     std::vector<Object*> objects;
     BVH* bvh;
     Camera camera;
@@ -31,5 +31,6 @@ public:
     void sample_light(Intersection& inter, float& pdf);
     vec3 castRay(const Ray& ray, int depth);
     vec3 castRay_merge(const Ray& ray);
+    vec3 calculate_direct_light(const Ray &ray, const Intersection &inter, const vec3 &kd, float &pdf);
 };
 #endif //PATHTRACER_SCENE_H

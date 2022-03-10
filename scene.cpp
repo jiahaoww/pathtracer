@@ -10,6 +10,7 @@ Scene::Scene(Camera &cam) {
     width = cam.width;
     height = cam.height;
     camera = cam;
+    acc = nullptr;
 }
 
 Intersection Scene::intersect(const Ray &ray) const {
@@ -43,7 +44,7 @@ void Scene::sample_light(Intersection &inter, float &pdf) {
             current_light_area += obj->get_area();
             if (current_light_area >= area) {
                 obj->sample(inter, pdf);
-                pdf *= obj->get_area() / light_area;
+                // pdf *= obj->get_area() / light_area;
                 break;
             }
         }
@@ -75,7 +76,38 @@ vec3 get_intersection_color(Intersection& inter, bool& has_texture) {
     return {color.x / 255.0f, color.y / 255.0f, color.z / 255.0};
 }
 
+vec3 Scene::calculate_direct_light(const Ray& ray, const Intersection& inter, const vec3& kd, float& pdf) {
+    vec3 wo = -ray.dir;
+    vec3 L_dir(0.0f);
+    // sample light
+    Intersection light_inter;
+    float light_area_pdf;
+    sample_light(light_inter, light_area_pdf);
+    vec3 light_dir = glm::normalize(light_inter.pos - inter.pos);
+    Ray light_ray(inter.pos, light_dir);
+    Intersection light_ray_inter = intersect(light_ray);
+
+    bool light_hit = light_ray_inter.has && light_ray_inter.obj == light_inter.obj;
+
+    if (!light_hit) {
+        return L_dir;
+    }
+
+    float d = glm::length(light_inter.pos - inter.pos);
+    pdf = light_area_pdf * d * d / glm::dot(-light_dir, light_inter.normal);
+    vec3 brdf = inter.m->eval(inter.normal, wo, light_dir, kd);
+    L_dir = brdf
+            * light_inter.m->emit
+            * glm::dot(inter.normal, light_dir)
+            / pdf;
+    if (glm::length(brdf) < EPSILON) {
+        pdf = 0.0f;
+    }
+    return L_dir;
+}
+
 vec3 Scene::castRay(const Ray &ray, int depth) {
+    vec3 wo = -ray.dir;
     if (depth > max_depth) {
         return vec3(0.0f);
     }
@@ -83,53 +115,63 @@ vec3 Scene::castRay(const Ray &ray, int depth) {
     if (!inter.has) {
         return vec3(0.0f);
     }
-    if (inter.m->has_emission) {
+    if (inter.m->has_emission && depth == 0) {
         return inter.m->emit;
     }
-    bool is_mirror = inter.m->type != DIFFUSE;
-    vec3 L_dir(0.0f), L_in_dir(0.0f);
-    Intersection light_inter;
-    float light_pdf;
-    sample_light(light_inter, light_pdf);
-    vec3 light_dir = glm::normalize(light_inter.pos - inter.pos);
-    Ray light_ray(inter.pos, light_dir);
-    Intersection light_ray_inter = intersect(light_ray);
-
     bool has_texture = false;
     vec3 kd = get_intersection_color(inter, has_texture);
 
-    if (light_ray_inter.has && light_ray_inter.obj == light_inter.obj) {
-        float d = glm::length(light_inter.pos - inter.pos);
-        L_dir = inter.m->eval(inter.normal, -ray.dir, light_dir, kd)
-                * light_inter.m->emit
-                * glm::dot(inter.normal, light_dir)
-                * glm::dot(light_inter.normal, -light_dir)
-                / (d * d * light_pdf);
-    }
+    float light_pdf = 0.0f;
+    vec3 L_dir_light = calculate_direct_light(ray, inter, kd, light_pdf);
 
-    float p = get_random_float();
-    if (p > rr) {
-        return glm::clamp(L_dir, 0.0f, 1.0f);
-    }
-
-
-    vec3 wi = inter.m->sample(inter.normal, -ray.dir);
-    float pdf = inter.m->pdf(inter.normal, -ray.dir, wi);
+    // sample brdf
+    vec3 wi = inter.m->sample(inter.normal, wo);
+    float pdf = inter.m->pdf(inter.normal, wo, wi);
     Ray obj_ray(inter.pos, wi);
     Intersection obj_ray_inter = intersect(obj_ray);
 
-    if (!obj_ray_inter.has || (!is_mirror && obj_ray_inter.m->has_emission)) {
-        return glm::clamp(L_dir, 0.0f, 1.0f);
+    // not hit
+    if (!obj_ray_inter.has) {
+        return glm::clamp(L_dir_light, 0.0f, 1.0f);
     }
 
 
-    L_in_dir = castRay(obj_ray, depth + 1)
-               * inter.m->eval(inter.normal, -ray.dir, wi, kd)
-               * std::abs(glm::dot(inter.normal, wi))
-               / (pdf * rr);
+    bool hit_light = obj_ray_inter.m->has_emission && glm::dot(wi, obj_ray_inter.normal) < 0.01f;
 
-    vec3 color = L_dir + L_in_dir;
-    return glm::clamp(color, 0.0f, 1.0f);
+    float brdf_pdf = 0.0f;
+    vec3 L_dir_brdf(0.0f);
+
+    // if wi hits light, no indirect light,
+    if (hit_light) {
+        brdf_pdf = pdf;
+        L_dir_brdf = inter.m->eval(inter.normal, wo, wi, kd)
+                 * obj_ray_inter.m->emit
+                 * glm::dot(inter.normal, wi)
+                 / brdf_pdf;
+        float light_pdf2 = std::pow(light_pdf, 2.0f);
+        float brdf_pdf2 = std::pow(brdf_pdf, 2.0f);
+        float denominator = light_pdf2 + brdf_pdf2;
+        vec3 L_dir = L_dir_light * light_pdf2 / denominator + L_dir_brdf * brdf_pdf2 / denominator;
+        return glm::clamp(L_dir, 0.0f, 1.0f);
+    }
+
+    // if wi hits an object, indirect light
+    else {
+        float p = get_random_float();
+
+        if (p > rr) {
+            return glm::clamp(L_dir_light, 0.0f, 1.0f);
+        }
+
+        vec3 L_in_dir = castRay(obj_ray, depth + 1)
+                   * inter.m->eval(inter.normal, wo, wi, kd)
+                   * std::abs(glm::dot(inter.normal, wi))
+                   / (pdf * rr);
+
+        vec3 color = L_dir_light + L_in_dir;
+        return color;
+        return glm::clamp(color, 0.0f, 1.0f);
+    }
 }
 
 vec3 Scene::castRay_merge(const Ray &ray) {
