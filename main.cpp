@@ -11,7 +11,7 @@
 
 int main() {
     int model = 3;
-    int spp = 4096;
+    int spp = 1024;
     std::string name;
     switch (model) {
         case 1: {

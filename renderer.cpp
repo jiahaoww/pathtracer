@@ -59,9 +59,9 @@ void Renderer::write_to_file(const std::string& filename) {
     int height = scene.height;
     const float gamma = 1.0 / 2.2;
     for (auto i = 0; i < height * width; ++i) {
-        image[3 * i] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].x), gamma));
-        image[3 * i + 1] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].y), gamma));
-        image[3 * i + 2] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].z), gamma));
+        image[3 * i] = (unsigned char) (255 * std::pow(std::clamp(frame_buffer[i].x, 0.0f, 1.0f), gamma));
+        image[3 * i + 1] = (unsigned char) (255 * std::pow(std::clamp(frame_buffer[i].y, 0.0f, 1.0f), gamma));
+        image[3 * i + 2] = (unsigned char) (255 * std::pow(std::clamp(frame_buffer[i].z, 0.0f, 1.0f), gamma));
     }
     stbi_write_png(filename.c_str(), width, height, 3, image.data(), 0);
 }
