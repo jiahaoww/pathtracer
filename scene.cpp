@@ -6,6 +6,7 @@
 #include "triangle.h"
 #include "stb/stb_image_write.h"
 
+
 Scene::Scene(Camera &cam) {
     width = cam.width;
     height = cam.height;
@@ -30,19 +31,29 @@ void Scene::build_bvh() {
 }
 
 void Scene::sample_light(Intersection &inter, float &pdf) {
+    int light_cnt = 0;
     float light_area = 0.0f;
     for (auto& obj: objects) {
         if (obj->m->has_emission) {
             light_area += obj->get_area();
+            light_cnt++;
         }
     }
     float p = get_random_float();
+    float idx = p * light_cnt;
     float area = p * light_area;
     float current_light_area = 0.0f;
+    int cnt = 0;
     for (auto& obj: objects) {
         if (obj->m->has_emission) {
+            cnt++;
             current_light_area += obj->get_area();
-            if (current_light_area >= area) {
+//            if (current_light_area >= area) {
+//                obj->sample(inter, pdf);
+//                // pdf *= obj->get_area() / light_area;
+//                break;
+//            }
+            if (cnt >= idx) {
                 obj->sample(inter, pdf);
                 // pdf *= obj->get_area() / light_area;
                 break;
@@ -87,18 +98,18 @@ vec3 Scene::calculate_direct_light(const Ray& ray, const Intersection& inter, co
     Ray light_ray(inter.pos, light_dir);
     Intersection light_ray_inter = intersect(light_ray);
 
-    bool light_hit = light_ray_inter.has && light_ray_inter.obj == light_inter.obj;
+    bool light_hit = light_ray_inter.has && light_ray_inter.m->has_emission && glm::dot(light_ray_inter.normal, light_dir) < 0.0f;
 
     if (!light_hit) {
         return L_dir;
     }
 
-    float d = glm::length(light_inter.pos - inter.pos);
-    pdf = light_area_pdf * d * d / glm::dot(-light_dir, light_inter.normal);
+    float d = glm::length(light_ray_inter.pos - inter.pos);
+    pdf = light_area_pdf * d * d / glm::dot(-light_dir, light_ray_inter.normal);
     vec3 brdf = inter.m->eval(inter.normal, wo, light_dir, kd);
     L_dir = brdf
-            * light_inter.m->emit
-            * glm::dot(inter.normal, light_dir)
+            * light_ray_inter.m->emit
+            * std::max(glm::dot(inter.normal, light_dir), 0.0f)
             / pdf;
     if (glm::length(brdf) < EPSILON) {
         pdf = 0.0f;

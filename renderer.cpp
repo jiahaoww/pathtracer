@@ -24,7 +24,7 @@ void Renderer::render(int spp) {
     // change the spp value to change sample amount
     std::cout << "SPP: " << spp << "\n";
     for (uint32_t j = 0; j < height; ++j) {
-        int threads = std::thread::hardware_concurrency() << 1;
+        int threads = std::thread::hardware_concurrency();
         int offset = width / threads;
         std::vector<std::future<void>> futures;
 
@@ -34,15 +34,17 @@ void Renderer::render(int spp) {
 
             std::future<void> task = std::async(std::launch::async, [&](int begin_offset, int end_offset) {
                 for (int i = begin_offset; i < end_offset; ++i) {
+                    vec3 color(0.0f);
+
                     // generate primary ray direction
                     for (int k = 0; k < spp; k++) {
                         float x = (2 * (i + get_random_float()) / (float)width - 1) *
                                   imageAspectRatio * scale;
                         float y = (1 - 2 * (j + get_random_float()) / (float)height) * scale;
-
                         vec3 dir = glm::normalize(inverse_view * vec4(vec3(x, y, -1.0f), 0.0f));
-                        frame_buffer[j * width + i] += glm::clamp(scene.castRay(Ray(camera.eye, dir), 0), 0.0f, 1.0f) / (float)spp;
+                        color += glm::clamp(scene.castRay(Ray(camera.eye, dir), 0), 0.0f, 1.0f) / (float)spp;
                     }
+                    frame_buffer[j * width + i] = color;
                 }
             }, begin_offset, end_offset);
             futures.emplace_back(std::move(task));
@@ -50,8 +52,6 @@ void Renderer::render(int spp) {
         UpdateProgress(j / (float) height);
     }
     UpdateProgress(1.f);
-
-
 }
 
 void Renderer::write_to_file(const std::string& filename) {
@@ -62,7 +62,6 @@ void Renderer::write_to_file(const std::string& filename) {
         image[3 * i] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].x), gamma));
         image[3 * i + 1] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].y), gamma));
         image[3 * i + 2] = (unsigned char) (255 * std::pow(clamp(0, 1, frame_buffer[i].z), gamma));
-
     }
     stbi_write_png(filename.c_str(), width, height, 3, image.data(), 0);
 }

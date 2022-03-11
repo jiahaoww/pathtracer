@@ -8,7 +8,7 @@
 	<height value="900"/>
 </camera>
 <light mtlname="Light1" radiance="901.803, 901.803, 901.803"/>
-<light mtlname="Light2" radiance="0, 0, 100.0"/>
-<light mtlname="Light3" radiance="0, 11.1111, 0 "/>
-<light mtlname="Light4" radiance="1.23457, 0, 0"/>
+<light mtlname="Light2" radiance="100.0, 100.0, 100.0"/>
+<light mtlname="Light3" radiance="11.1111, 11.1111, 11.1111 "/>
+<light mtlname="Light4" radiance="1.23457, 1.23457, 1.23457"/>
 <light mtlname="Light5" radiance="800.0, 800.0, 800.0"/>

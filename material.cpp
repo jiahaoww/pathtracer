@@ -90,7 +90,7 @@ vec3 Material::sample(const vec3 &N, const vec3 &wo) const {
         case MATERIAL_TYPE::DIFFUSE: {
             float x1 = get_random_float();
             float x2 = get_random_float();
-            float z = std::abs(1.0f - 2.0f * x1);
+            float z = 1.0f - x1;
             float r = std::sqrt(1.0f - z * z);
             float phi = x2 * 2.0f * PI;
             float x = r * std::cos(phi);
