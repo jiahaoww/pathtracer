@@ -49,9 +49,11 @@ Intersection Triangle::get_intersection(const Ray &ray) {
     vec3 s1 = glm::cross(ray.dir, e2);
     vec3 s2 = glm::cross(s, e1);
     double s1dote1 = glm::dot(s1, e1);
-    if (std::abs(s1dote1) < EPSILON) {
-        return inter;
-    }
+
+//    if (std::abs(s1dote1) < EPSILON) {
+//        return inter;
+//    }
+
     double inv_s1dote1 = 1.0f / s1dote1;
 
     double b1 = glm::dot(s1, s) * inv_s1dote1;
@@ -64,7 +66,7 @@ Intersection Triangle::get_intersection(const Ray &ray) {
     }
 
     double t = glm::dot(s2, e2) * inv_s1dote1;
-    if (t < 1e-2) {
+    if (t < 1e-3) {
         return inter;
     }
 

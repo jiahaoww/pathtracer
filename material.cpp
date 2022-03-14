@@ -151,7 +151,7 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3 &K
     if (texture != nullptr) {
         my_Kd = sdr2ldr(KD);
     }
-    vec3 my_Ks = sdr2ldr(Ks);
+    vec3 my_Ks = Ks;
     switch (type) {
         case MATERIAL_TYPE::DIFFUSE: {
             if (glm::dot(wi, N) > 0.0f) {

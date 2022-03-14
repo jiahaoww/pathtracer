@@ -44,8 +44,14 @@ public:
 
             float ior = material.Ni;
             float shine_exponent = material.Ns;
-            vec3 Kd = {material.Kd.X, material.Kd.Y, material.Kd.Z};
-            vec3 Ks = {material.Ks.X, material.Ks.Y, material.Ks.Z};
+            vec3 kd = {material.Kd.X, material.Kd.Y, material.Kd.Z};
+            vec3 ks = {material.Ks.X, material.Ks.Y, material.Ks.Z};
+
+            // normalize kd and ks when kd + ks > 1
+
+            vec3 Kd, Ks;
+            Kd = {kd.x + ks.x > 1 ? kd.x / (kd.x + ks.x) : kd.x, kd.y + ks.y > 1 ? kd.y / (kd.y + ks.y): kd.y, kd.z + ks.z > 1 ? kd.z / (kd.z + ks.z) : kd.z };
+            Ks = {kd.x + ks.x > 1 ? ks.x / (kd.x + ks.x) : ks.x, kd.y + ks.y > 1 ? ks.y / (kd.y + ks.y): ks.y, kd.z + ks.z > 1 ? ks.z / (kd.z + ks.z) : ks.z };
 
             if (shine_exponent > 1.0f) {
                 materialType = PHONG;
