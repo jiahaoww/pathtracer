@@ -24,6 +24,7 @@ class BVH {
 public:
     BvhNode *root;
     std::vector<Object *> objects;
+    int max_depth = 0;
 public:
     BvhNode *recursive_build(Object **objs, size_t length) {
         if (length == 1) {
@@ -83,6 +84,8 @@ public:
         objects = objs;
         std::cout << "start building BVH" << std::endl;
         root = recursive_build(objects.data(), objects.size());
+//        get_max_depth(root, 0);
+//        std::cout << max_depth << std::endl;
         // print_aabb(root);
     }
 
@@ -143,6 +146,17 @@ public:
         std::cout << "max " << node->bounding_box.v_max.x << " " << node->bounding_box.v_max.y << " " << node->bounding_box.v_max.z << std::endl;
         std::cout << std::endl;
         print_aabb(node->right);
+    }
+
+    void get_max_depth(BvhNode* node, int depth) {
+        if (node == nullptr) {
+            return;
+        }
+        if (node->left == nullptr && node->right == nullptr) {
+            max_depth = std::max(max_depth, depth);
+        }
+        get_max_depth(node->left, depth + 1);
+        get_max_depth(node->right, depth + 1);
     }
 
 };

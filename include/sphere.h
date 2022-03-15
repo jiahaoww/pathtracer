@@ -1,5 +1,5 @@
 //
-// Created by vr on 2022/3/2.
+// Created by jiahaoww on 2022/3/2.
 //
 
 #ifndef PATHTRACER_SPHERE_H

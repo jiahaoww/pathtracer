@@ -50,8 +50,13 @@ public:
             // normalize kd and ks when kd + ks > 1
 
             vec3 Kd, Ks;
-            Kd = {kd.x + ks.x > 1 ? kd.x / (kd.x + ks.x) : kd.x, kd.y + ks.y > 1 ? kd.y / (kd.y + ks.y): kd.y, kd.z + ks.z > 1 ? kd.z / (kd.z + ks.z) : kd.z };
-            Ks = {kd.x + ks.x > 1 ? ks.x / (kd.x + ks.x) : ks.x, kd.y + ks.y > 1 ? ks.y / (kd.y + ks.y): ks.y, kd.z + ks.z > 1 ? ks.z / (kd.z + ks.z) : ks.z };
+            Kd = {kd.x + ks.x > 1 ? kd.x / (kd.x + ks.x) : kd.x, kd.y + ks.y > 1 ? kd.y / (kd.y + ks.y) : kd.y,
+                  kd.z + ks.z > 1 ? kd.z / (kd.z + ks.z) : kd.z};
+            Ks = {kd.x + ks.x > 1 ? ks.x / (kd.x + ks.x) : ks.x, kd.y + ks.y > 1 ? ks.y / (kd.y + ks.y) : ks.y,
+                  kd.z + ks.z > 1 ? ks.z / (kd.z + ks.z) : ks.z};
+            if (obj_name == "bedroom.obj") {
+                Ks = sdr2ldr(Ks);
+            }
 
             if (shine_exponent > 1.0f) {
                 materialType = PHONG;
@@ -96,7 +101,7 @@ public:
                                                   normals[2], texture_coords[0], texture_coords[1], texture_coords[2],
                                                   tm);
 
-                std::vector<Triangle *> one_face = { triangle };
+                std::vector<Triangle *> one_face = {triangle};
                 accelerator.add_faces(one_face);
                 triangle_list.push_back(triangle);
             }

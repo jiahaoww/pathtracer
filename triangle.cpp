@@ -42,17 +42,11 @@ float Triangle::get_area() {
 
 Intersection Triangle::get_intersection(const Ray &ray) {
     Intersection inter;
-//    if (glm::dot(ray.dir, normal) > 0.0f) {
-//        return inter;
-//    }
+
     vec3 s = ray.ori - v[0];
     vec3 s1 = glm::cross(ray.dir, e2);
     vec3 s2 = glm::cross(s, e1);
     double s1dote1 = glm::dot(s1, e1);
-
-//    if (std::abs(s1dote1) < EPSILON) {
-//        return inter;
-//    }
 
     double inv_s1dote1 = 1.0f / s1dote1;
 
