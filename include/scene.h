@@ -21,6 +21,7 @@ public:
     BVH* bvh;
     Camera camera;
     EmbreeAccelerator* acc;
+    bool using_mis = true;
 
 public:
     Scene() = default;

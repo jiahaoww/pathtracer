@@ -67,11 +67,6 @@ public:
                 materialType = GLASS;
             }
 
-            if (mesh.MeshMaterial.name == "BackWall") {
-//                materialType = MIRROR;
-//                Ks = {1.0f, 1.0f, 1.0f};
-            }
-
             Material *mym = new Material(materialType, Kd, Ks, emit, ior, shine_exponent, material.map_Kd,
                                          material.map_Ks);
             Material *tm = m == nullptr ? mym : m;

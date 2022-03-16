@@ -215,10 +215,10 @@ vec3 Material::eval(const vec3 &N, const vec3 &wo, const vec3 &wi, const vec3 &K
             float f = fresnel(N, wo, ior);
 
             if (wi == reflect(N, wo)) {
-                return my_Ks / std::max(glm::dot(wi, N), 0.01f);
+                return my_Ks / glm::dot(wi, N);
             }
             if (wi == refract(N, wo, ior)) {
-                return my_Ks / std::max(std::abs(glm::dot(wi, N)), 0.01f);
+                return my_Ks / std::abs(glm::dot(wi, N));
             }
             return vec3(0.0f);
         }
@@ -239,7 +239,7 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
             if (glm::dot(wi, N) > 0.0f) {
                 vec3 reflect_dir = reflect(N, wo);
                 float cos_phi = glm::dot(reflect_dir, wi);
-                return std::pow(cos_phi, shine_exponent) * (shine_exponent + 1.0f) / (2.0f * PI) + EPSILON;
+                return std::pow(cos_phi, shine_exponent) * (shine_exponent + 1.0f) / (2.0f * PI);
             } else {
                 return EPSILON;
             }
@@ -268,12 +268,13 @@ float Material::pdf(const vec3 &N, const vec3 &wo, const vec3 &wi) const {
         case MATERIAL_TYPE::GLASS: {
             float f = fresnel(N, wo, ior);
             if (wi == reflect(N, wo)) {
+                return 1.0f;
                 return std::max(f, 0.01f);
             }
-            if (wi == refract(N, wo, ior)) {
+            else {
+                return 1.0f;
                 return std::max(1.0f - f, 0.01f);
             }
-            return 0.01f;
         }
 
     }

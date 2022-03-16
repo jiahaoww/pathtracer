@@ -123,7 +123,7 @@ vec3 Scene::calculate_direct_light(const Ray& ray, const Intersection& inter, co
 }
 
 vec3 Scene::castRay(const Ray &ray, int depth) {
-    const float max_radiance = 1000.0f;
+    const float max_radiance = 10.0f;
     vec3 wo = -ray.dir;
     if (depth > max_depth) {
         return vec3(0.0f);
@@ -162,8 +162,8 @@ vec3 Scene::castRay(const Ray &ray, int depth) {
     vec3 color(0.0f);
     if (hit_light) {
         brdf_pdf = pdf;
-        L_dir_brdf = inter.m->eval(inter.normal, wo, wi, kd) // kd / pi or 0
-                 * obj_ray_inter.m->emit // (17, 12, 4)
+        L_dir_brdf = obj_ray_inter.m->emit // (17, 12, 4)
+                 * inter.m->eval(inter.normal, wo, wi, kd) // kd / pi or 0
                  * glm::dot(inter.normal, wi)
                  / brdf_pdf; // 0.5 / pi
         if (L_dir_brdf.x > 20.0f) {
@@ -174,6 +174,9 @@ vec3 Scene::castRay(const Ray &ray, int depth) {
         float denominator = light_pdf2 + brdf_pdf2;
         vec3 L_dir = L_dir_light * light_pdf2 / denominator + L_dir_brdf * brdf_pdf2 / denominator;
         color = L_dir;
+        if (!using_mis) {
+            color = L_dir_light;
+        }
     }
     // if wi hits an object, indirect light
     else {
@@ -185,7 +188,6 @@ vec3 Scene::castRay(const Ray &ray, int depth) {
                    * inter.m->eval(inter.normal, wo, wi, kd)
                    * std::abs(glm::dot(inter.normal, wi))
                    / (pdf * rr);
-
         color = L_dir_light + L_in_dir;
     }
     if (isnan(color.x) || isnan(color.y) || isnan(color.z)) {

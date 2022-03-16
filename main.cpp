@@ -10,8 +10,8 @@
 
 
 int main() {
-    int model = 3;
-    int spp = 16;
+    int model = 2;
+    int spp = 10240;
     std::string name;
     switch (model) {
         case 1: {
@@ -44,6 +44,9 @@ int main() {
     }
 
     Scene scene(camera);
+    if (model == 1) {
+        scene.using_mis = false;
+    }
     for (auto Mesh: MeshList) {
         scene.add_obj(Mesh);
     }
