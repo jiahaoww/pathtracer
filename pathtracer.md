@@ -1,3 +1,5 @@
+
+
 ### 蒙特卡洛路径追踪渲染器实验报告
 
 22121179 吴佳豪
@@ -192,27 +194,27 @@ public:
 
 + 微表面材质
 
-  ![image-20220318165154715](C:\Users\vr\AppData\Roaming\Typora\typora-user-images\image-20220318165154715.png)
+  ![1](markdown-img\1.png)
 
 ​		微表面材质使用cook-torrance模型，前半部分是漫反射项，与漫反射材质处理类似，后半部分是镜面反射项。定义如下
 
-![image-20220318165333979](C:\Users\vr\AppData\Roaming\Typora\typora-user-images\image-20220318165333979.png)
+![2](markdown-img\2.png)
 
 ​		D,F,G分别是法线分布函数，菲涅尔项，几何函数。
 
 ​		其中D我们使用的是Trowbridge-Reitz GGX：
 
-![image-20220318165513074](C:\Users\vr\AppData\Roaming\Typora\typora-user-images\image-20220318165513074.png)
+![3](markdown-img\3.png)
 
 ​		F我们使用的是Fresnel-Schlick近似：
 
-​																						![image-20220318165611843](C:\Users\vr\AppData\Roaming\Typora\typora-user-images\image-20220318165611843.png)
+![4](markdown-img\4.png)
 
 ​		G我们使用的是Schlick-GGX：
 
-![image-20220318165705195](C:\Users\vr\AppData\Roaming\Typora\typora-user-images\image-20220318165705195.png)
+![5](markdown-img\5.png)
 
-​																	                   	![image-20220318165731899](C:\Users\vr\AppData\Roaming\Typora\typora-user-images\image-20220318165731899.png)
+![6](markdown-img\6.png)
 
 + 完美镜面反射材质
 
@@ -263,7 +265,7 @@ public:
   }
   ```
 
- 	 pdf 返回1即可
+ pdf 返回1即可
 
 
 
@@ -617,3 +619,17 @@ void Renderer::render(int spp) {
 ```
 
 由相机的参数可以得到相机的look_at矩阵，并求其逆矩阵，将该矩阵乘上相机坐标系中的光线方向向量即可得到世界坐标系中的光线方向向量。使用C++的future特性进行多线程并行计算。在每个spp的计算中，对像素中心坐标进行微小扰动(仍在该像素范围内)，通过多个spp的加权平均，即可达到抗锯齿的效果。
+
+
+
+#### 3.运行结果
+
+![cornell-box](gallery\cornell-box.png)
+
+
+
+![](gallery\veach-mis-10240.png)
+
+
+
+![bedroom-8192](gallery\bedroom-8192.png)
