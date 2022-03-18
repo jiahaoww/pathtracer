@@ -9,8 +9,6 @@
 
 class Triangle: public Object{
 public:
-
-
     vec3 v[3];
     vec3 vn[3];
     vec2 tex[3];

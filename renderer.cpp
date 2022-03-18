@@ -49,9 +49,9 @@ void Renderer::render(int spp) {
             }, begin_offset, end_offset);
             futures.emplace_back(std::move(task));
         }
-        UpdateProgress(j / (float) height);
+        update_progress(j / (float) height);
     }
-    UpdateProgress(1.f);
+    update_progress(1.f);
 }
 
 void Renderer::write_to_file(const std::string& filename) {

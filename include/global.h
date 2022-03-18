@@ -28,7 +28,7 @@ inline float get_random_float()
     return dist(dev);
 }
 
-inline void UpdateProgress(float progress)
+inline void update_progress(float progress)
 {
     int barWidth = 70;
 

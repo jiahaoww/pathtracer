@@ -162,13 +162,10 @@ vec3 Scene::castRay(const Ray &ray, int depth) {
     vec3 color(0.0f);
     if (hit_light) {
         brdf_pdf = pdf;
-        L_dir_brdf = obj_ray_inter.m->emit // (17, 12, 4)
-                 * inter.m->eval(inter.normal, wo, wi, kd) // kd / pi or 0
+        L_dir_brdf = obj_ray_inter.m->emit
+                 * inter.m->eval(inter.normal, wo, wi, kd)
                  * glm::dot(inter.normal, wi)
-                 / brdf_pdf; // 0.5 / pi
-        if (L_dir_brdf.x > 20.0f) {
-            // exit(-1);
-        }
+                 / brdf_pdf;
         float light_pdf2 = std::pow(light_pdf, 2.0f);
         float brdf_pdf2 = std::pow(brdf_pdf, 2.0f);
         float denominator = light_pdf2 + brdf_pdf2;

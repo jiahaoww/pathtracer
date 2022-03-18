@@ -15,7 +15,6 @@ public:
     float get_area() override;
     Intersection get_intersection(const Ray& ray) override;
     void sample(Intersection& inter, float& pdf) override;
-
 };
 
 #endif //PATHTRACER_MESH_H
