@@ -194,27 +194,27 @@ public:
 
 + 微表面材质
 
-  ![1](markdown-img\1.png)
+  ![1](markdown-img/1.png)
 
 ​		微表面材质使用cook-torrance模型，前半部分是漫反射项，与漫反射材质处理类似，后半部分是镜面反射项。定义如下
 
-![2](markdown-img\2.png)
+![2](markdown-img/2.png)
 
 ​		D,F,G分别是法线分布函数，菲涅尔项，几何函数。
 
 ​		其中D我们使用的是Trowbridge-Reitz GGX：
 
-![3](markdown-img\3.png)
+![3](markdown-img/3.png)
 
 ​		F我们使用的是Fresnel-Schlick近似：
 
-![4](markdown-img\4.png)
+![4](markdown-img/4.png)
 
 ​		G我们使用的是Schlick-GGX：
 
-![5](markdown-img\5.png)
+![5](markdown-img/5.png)
 
-![6](markdown-img\6.png)
+![6](markdown-img/6.png)
 
 + 完美镜面反射材质
 
@@ -624,12 +624,12 @@ void Renderer::render(int spp) {
 
 #### 3.运行结果
 
-![cornell-box](gallery\cornell-box.png)
+![cornell-box](gallery/cornell-box.png)
 
 
 
-![](gallery\veach-mis-10240.png)
+![](gallery/veach-mis-10240.png)
 
 
 
-![bedroom-8192](gallery\bedroom-8192.png)
+![bedroom-8192](gallery/bedroom-8192.png)
