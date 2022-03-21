@@ -38,6 +38,7 @@ int main() {
     auto[acc, meshes] = Loader::load(base_path, model_name, nullptr, light_emits);
 
 
+    auto start1 = std::chrono::system_clock::now();
     std::vector<Mesh *> MeshList;
     for (auto &mesh: meshes) {
         MeshList.push_back(new Mesh(mesh));
@@ -52,8 +53,12 @@ int main() {
     }
 
     scene.build_bvh();
+    auto stop1 = std::chrono::system_clock::now();
+    std::cout << " bvh " << std::chrono::duration_cast<std::chrono::milliseconds>(stop1 - start1).count()
+              << " seconds\n";
+
     acc.init();
-    scene.acc = &acc;
+    // scene.acc = &acc;
     Renderer renderer(scene);
 
     auto start = std::chrono::system_clock::now();
@@ -66,7 +71,7 @@ int main() {
     std::cout << "Time taken: " << std::chrono::duration_cast<std::chrono::hours>(stop - start).count() << " hours\n";
     std::cout << "          : " << std::chrono::duration_cast<std::chrono::minutes>(stop - start).count()
               << " minutes\n";
-    std::cout << "          : " << std::chrono::duration_cast<std::chrono::seconds>(stop - start).count()
+    std::cout << "          : " << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
               << " seconds\n";
     return 0;
 
@@ -83,8 +88,18 @@ int main() {
 //
 //    Material *metal = new Material(MATERIAL_TYPE::MICRO_FACET, vec3(0.725f, 0.71f, 0.68f),
 //                                   vec3(186 / 255.0f, 85 / 255.0f, 211 / 255.0f), vec3(0.0f), 1.00);
-//    metal->roughness = 0.03;
+//    metal->roughness = 0.1;
 //    metal->metallic = 1.0f;
+//
+//    Material *metal1 = new Material(MATERIAL_TYPE::MICRO_FACET, vec3(0.725f, 0.71f, 0.68f),
+//                                   vec3(135 / 255.0f, 206 / 255.0f, 235 / 255.0f), vec3(0.0f), 1.00);
+//    metal1->roughness = 0.1;
+//    metal1->metallic = 1.0f;
+//
+//    Material *metal2 = new Material(MATERIAL_TYPE::MICRO_FACET, vec3(0.725f, 0.71f, 0.68f),
+//                                   vec3(255 / 255.0f, 192 / 255.0f, 203 / 255.0f), vec3(0.0f), 1.00);
+//    metal2->roughness = 0.1;
+//    metal2->metallic = 1.0f;
 //
 //    Material *pure_mirror = new Material(MATERIAL_TYPE::MIRROR, vec3(0.0f), vec3(1.0f), vec3(0.0f), 1.0f);
 //    Material *pure_glass = new Material(MATERIAL_TYPE::GLASS, vec3(0.0f), vec3(1.0f), vec3(0.0f), 1.5f);
@@ -105,10 +120,10 @@ int main() {
 //    float offset = 150;
 //    float y = 100;
 //    Sphere mirror_sphere(vec3(x + offset, y, 100), 100);
-//    mirror_sphere.m = pure_mirror;
+//    mirror_sphere.m = metal1;
 //
 //    Sphere glass_sphere(vec3(x - offset, y, 100), 100);
-//    glass_sphere.m = pure_glass;
+//    glass_sphere.m = metal2;
 //
 //    Sphere metal_sphere(vec3(x, y, 400), 100);
 //    metal_sphere.m = metal;
@@ -129,7 +144,7 @@ int main() {
 //    Renderer render(scene);
 //
 //    auto start = std::chrono::system_clock::now();
-//    render.render(1024);
+//    render.render(4096);
 //    render.write_to_file("cornell.png");
 //    auto stop = std::chrono::system_clock::now();
 //

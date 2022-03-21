@@ -17,8 +17,7 @@
 
 class Loader {
 public:
-
-
+    static int triangle_cnt;
     static std::tuple<EmbreeAccelerator, std::vector<std::vector<Object *>>>
     load(std::string &base_path, std::string &obj_name, Material *m, std::map<std::string, vec3> &lights_emit) {
         EmbreeAccelerator accelerator;
@@ -99,9 +98,11 @@ public:
                 std::vector<Triangle *> one_face = {triangle};
                 accelerator.add_faces(one_face);
                 triangle_list.push_back(triangle);
+                triangle_cnt++;
             }
             meshes.push_back(triangle_list);
         }
+        std::cout << "triangle cnt: " << triangle_cnt << std::endl;
         return {accelerator, meshes};
     }
 
@@ -124,5 +125,6 @@ public:
     }
 };
 
+int Loader::triangle_cnt = 0;
 
 #endif //PATHTRACER_LOADER_H
