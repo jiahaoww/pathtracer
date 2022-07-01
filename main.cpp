@@ -10,7 +10,7 @@
 
 
 int main() {
-    int model = 1;
+    int model = 3;
     int spp = 16;
     std::string name;
     switch (model) {
@@ -58,7 +58,7 @@ int main() {
               << " seconds\n";
 
     acc.init();
-    // scene.acc = &acc;
+    scene.acc = &acc;
     Renderer renderer(scene);
 
     auto start = std::chrono::system_clock::now();
@@ -71,7 +71,7 @@ int main() {
     std::cout << "Time taken: " << std::chrono::duration_cast<std::chrono::hours>(stop - start).count() << " hours\n";
     std::cout << "          : " << std::chrono::duration_cast<std::chrono::minutes>(stop - start).count()
               << " minutes\n";
-    std::cout << "          : " << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
+    std::cout << "          : " << std::chrono::duration_cast<std::chrono::seconds>(stop - start).count()
               << " seconds\n";
     return 0;
 

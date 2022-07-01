@@ -642,7 +642,7 @@ void Renderer::render(int spp) {
 
 场景中的物体使用2.2.4中的球类，材质为Microfacet材质，设置metallic为1.0，roughness为0.1，并为不同的球设置不同的Ks值，可以实现有色金属球的效果，设置spp为4096得到如下图片。
 
-![cornell-sphere-0.1](F:\pathtracer\gallery\cornell-sphere-0.1.png)
+![cornell-sphere-0.1](gallery\cornell-sphere-0.1.png)
 
 
 
